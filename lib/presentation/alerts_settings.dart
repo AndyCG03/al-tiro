@@ -5,6 +5,7 @@ import '../domain/models.dart';
 import '../l10n/app_text.dart';
 import 'theme.dart';
 import 'widgets.dart';
+import 'hologram_guide.dart';
 import 'brand_components.dart';
 
 class AlertsPage extends StatelessWidget {
@@ -233,6 +234,27 @@ class SettingsPage extends StatelessWidget {
                         },
                       ),
                     ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Surface(
+                  padding: EdgeInsets.zero,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
+                    leading: Icon(
+                      Icons.auto_stories_outlined,
+                      color: Theme.of(c).colorScheme.primary,
+                    ),
+                    title: Text(
+                      t('guideTitle'),
+                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    ),
+                    subtitle: Text(t('guideSubtitle')),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => openHologramGuide(c),
                   ),
                 ),
                 const SizedBox(height: 20),

@@ -39,7 +39,16 @@ void main() {
       isEmpty,
       reason: 'Tutorial demo must never become a saved car',
     );
-    await tester.tap(find.text('Calendario'));
+    expect(
+      find.text(
+        'Para avanzar, toca «Calendario» en la barra inferior o usa el botón de abajo.',
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Alertas'));
+    await tester.pumpAndSettle();
+    expect(find.text('Tu día, de un vistazo'), findsOneWidget);
+    await tester.tap(find.text('Ir a Calendario'));
     await tester.pumpAndSettle();
     expect(find.text('Tu calendario'), findsOneWidget);
     expect(find.text('Descubre tus días'), findsOneWidget);
@@ -56,7 +65,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Demo'), findsOneWidget);
     expect(a.vehicles, isEmpty);
-    await tester.tap(find.text('Guía'));
+    await tester.tap(find.text('Ir a Alertas'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Listo, ir a mi app'));
     await tester.pumpAndSettle();
@@ -123,7 +132,11 @@ void main() {
       Brightness.dark,
     );
     expect(tester.takeException(), isNull);
-    await tester.tap(find.text('Guide'));
+    expect(find.text('Guide'), findsNothing);
+    await tester.tap(find.byTooltip('Settings'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Know your verification sticker'));
+    await tester.tap(find.text('Know your verification sticker'));
     await tester.pumpAndSettle();
     expect(find.text('Know your verification sticker'), findsOneWidget);
     expect(find.byType(HologramExample), findsNWidgets(6));

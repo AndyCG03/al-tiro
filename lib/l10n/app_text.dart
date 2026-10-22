@@ -8,6 +8,9 @@ class AppText {
   String call(String key) =>
       (language == 'en' ? en : es)[key] ?? es[key] ?? key;
   static const es = <String, String>{
+    "tourTapSection": "Para avanzar, toca «{section}» en la barra inferior o usa el botón de abajo.",
+    "tourGoTo": "Ir a",
+    "tourBack": "Anterior",
     "nameWelcome": "Vamos a conocernos.",
     "nameWelcomeBody": "Te ayudamos a entender tus días antes de salir.",
     "yourName": "¿Cómo te llamas?",
@@ -20,13 +23,13 @@ class AppText {
     "repeatTutorial": "Volver a ver el tutorial",
     "demoMode": "Vehículo de ejemplo · tus autos no cambian",
     "tourHomeTitle": "Tu día, de un vistazo",
-    "tourHomeBody": "Aquí ves el estado y los horarios. “Falta confirmar” indica que aún faltan avisos oficiales. Toca Calendario en la barra inferior.",
+    "tourHomeBody": "Aquí ves el estado y los horarios. “Falta confirmar” indica que aún faltan avisos oficiales.",
     "tourCalendarTitle": "Descubre tus días",
-    "tourCalendarBody": "Toca un día naranja para ver sus horarios. Las marcas de prohibición señalan una restricción ordinaria. Después abre Mis autos.",
+    "tourCalendarBody": "Prueba tocando un día naranja para ver sus horarios de restricción ordinaria.",
     "tourCarsTitle": "Cada auto, su calendario",
-    "tourCarsBody": "Aquí agregas tus autos, eliges su ilustración y guardas el holograma y vigencia reales. Este auto es sólo un ejemplo. Ahora toca Alertas.",
+    "tourCarsBody": "Aquí agregas autos, eliges su ilustración y guardas el holograma y la vigencia reales.",
     "tourAlertsTitle": "Lo importante, con tiempo",
-    "tourAlertsBody": "Encuentra próximos descansos y vencimientos. Estos avisos se consultan dentro de la app. Toca Guía para el último paso.",
+    "tourAlertsBody": "Consulta próximos descansos y vencimientos. La guía de hologramas y el tutorial están en Ajustes.",
     "tourGuideTitle": "Identifica tu holograma",
     "tourGuideBody": "Compara el símbolo de tu constancia con estos ejemplos. Las imágenes son ilustrativas. Ya conoces las cinco secciones.",
     "tourFinish": "Listo, ir a mi app",
@@ -228,6 +231,10 @@ class AppText {
     'onboardingBenefit3': 'Fuentes oficiales a un toque',
   };
   static const en = <String, String>{
+    "tourTapSection":
+        "To continue, tap {section} in the bottom bar or use the button below.",
+    "tourGoTo": "Open",
+    "tourBack": "Back",
     "nameWelcome": "Let's get to know you.",
     "nameWelcomeBody": "Know your driving days before heading out.",
     "yourName": "What is your name?",
@@ -240,13 +247,14 @@ class AppText {
     "repeatTutorial": "Replay the walkthrough",
     "demoMode": "Example vehicle · your saved cars stay unchanged",
     "tourHomeTitle": "Your day at a glance",
-    "tourHomeBody": "See the status and hours here. “Confirmation needed” means official notices are still missing. Tap Calendar in the bottom bar.",
+    "tourHomeBody": "See the status and hours here. “Confirmation needed” means official notices are still missing.",
     "tourCalendarTitle": "Explore your days",
-    "tourCalendarBody": "Tap an orange day to see its hours. Block symbols indicate an ordinary restriction. Then open My cars.",
+    "tourCalendarBody":
+        "Try tapping an orange day to see its ordinary restriction hours.",
     "tourCarsTitle": "A calendar for each car",
-    "tourCarsBody": "Add your vehicles, choose their artwork and enter the actual category and expiry date. This car is just an example. Tap Alerts next.",
+    "tourCarsBody": "Add vehicles, choose their artwork and enter the actual category and expiry date.",
     "tourAlertsTitle": "Keep track of what matters",
-    "tourAlertsBody": "See upcoming restriction days and expiry dates. These notices are viewed inside the app. Tap Guide for the final step.",
+    "tourAlertsBody": "See upcoming restriction days and expiry dates. Find the sticker guide and replay this tutorial in Settings.",
     "tourGuideTitle": "Identify your category",
     "tourGuideBody": "Compare the symbol on your certificate with these illustrative examples. You now know the five sections.",
     "tourFinish": "Ready, open my app",

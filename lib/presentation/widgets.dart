@@ -82,7 +82,7 @@ class Surface extends StatelessWidget {
         color: Theme.of(c).colorScheme.outlineVariant.withValues(alpha: .45),
       ),
     ),
-    child: child,
+    child: Material(type: MaterialType.transparency, child: child),
   );
 }
 

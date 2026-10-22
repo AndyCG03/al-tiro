@@ -1,6 +1,6 @@
 # Bienvenida y recorrido interactivo
 
-Primero se pide el nombre (2 a 30 caracteres), guardado sólo en este dispositivo. Después se muestra un recorrido por Inicio, Calendario, Mis autos, Alertas y Guía usando los mismos componentes de la app. La barra inferior cambia la sección y su explicación. En Calendario se pueden tocar fechas y cambiar el mes para consultar el detalle ordinario.
+Primero se pide el nombre (2 a 30 caracteres), guardado sólo en este dispositivo. Después se muestra un recorrido por Inicio, Calendario, Mis autos y Alertas usando los mismos componentes de la app. Cada paso nombra la siguiente pestaña, la destaca con borde y flecha y ofrece un botón «Ir a…». Se puede volver al paso anterior y no saltar pasos futuros. La guía de hologramas está en Ajustes. La barra inferior cambia la sección y su explicación. En Calendario se pueden tocar fechas y cambiar el mes para consultar el detalle ordinario.
 
 El recorrido usa un AppController en modo preview con repositorio local propio y un vehículo Demo. Las escrituras de preferencias están desactivadas en ese controlador; nunca se añade Demo a los vehículos del usuario. Una llamada pendiente se invalida al cerrar el controlador. Se indica expresamente que los datos son de ejemplo.
 

@@ -4,10 +4,10 @@ Primera versión Flutter de la app de Sidarta. Persona amigable al volante, pale
 
 ## Funcionalidades
 
-- Bienvenida por nombre y tutorial interactivo en cinco secciones, con vehículo de ejemplo separado de los datos guardados y opción de repetir desde Ajustes.
+- Bienvenida por nombre y tutorial interactivo en cuatro secciones, con vehículo de ejemplo separado de los datos guardados y opción de repetir desde Ajustes.
 - Calendario ordinario con días restringidos naranjas, símbolos y resumen mensual; detalle al seleccionar una fecha.
 
-- Cinco ilustraciones seleccionables por vehículo, navegación personalizada y guía visual de hologramas 00, 0, 1, 2 y Exento. Ejemplos esquemáticos, no reproducciones oficiales.
+- Cinco ilustraciones seleccionables por vehículo, navegación personalizada y guía visual en Ajustes de hologramas 00, 0, 1, 2 y Exento. Ejemplos esquemáticos, no reproducciones oficiales.
 
 - Inicio con resultado ordinario y confirmación separada de avisos extraordinarios.
 - Calendario mensual por vehículo y zona.

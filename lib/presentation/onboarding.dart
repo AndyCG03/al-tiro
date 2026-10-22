@@ -8,7 +8,6 @@ import 'alerts_settings.dart';
 import 'calendar_page.dart';
 import 'circula_navigation.dart';
 import 'garage_page.dart';
-import 'hologram_guide.dart';
 import 'home_page.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -167,21 +166,19 @@ class _TutorialExperienceState extends State<TutorialExperience> {
   @override
   Widget build(BuildContext c) {
     final t = AppText.of(c), scheme = Theme.of(c).colorScheme;
-    final names = ['home', 'calendar', 'cars', 'alerts', 'guide'];
-    final titles = [
-      'tourHome',
-      'tourCalendar',
-      'tourCars',
-      'tourAlerts',
-      'tourGuide',
-    ];
-    void select(int i) => setState(() => index = i);
+    final names = ['home', 'calendar', 'cars', 'alerts'];
+    final titles = ['tourHome', 'tourCalendar', 'tourCars', 'tourAlerts'];
+    void select(int i) {
+      if (i <= index + 1) {
+        setState(() => index = i);
+      }
+    }
+
     Widget page() => switch (index) {
       0 => HomePage(controller: demo, add: () {}, calendar: () => select(1)),
       1 => CalendarPage(controller: demo, add: () {}),
       2 => GaragePage(controller: demo),
-      3 => AlertsPage(controller: demo),
-      _ => const HologramGuide(),
+      _ => AlertsPage(controller: demo),
     };
     return Scaffold(
       appBar: AppBar(
@@ -225,7 +222,7 @@ class _TutorialExperienceState extends State<TutorialExperience> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                '${t('step')} ${index + 1} ${t('of')} 5',
+                                '${t('step')} ${index + 1} ${t('of')} ${names.length}',
                                 style: TextStyle(
                                   color: scheme.onPrimaryContainer,
                                   fontWeight: FontWeight.w800,
@@ -233,7 +230,7 @@ class _TutorialExperienceState extends State<TutorialExperience> {
                               ),
                             ),
                             ...List.generate(
-                              5,
+                              names.length,
                               (i) => Padding(
                                 padding: const EdgeInsets.only(left: 4),
                                 child: Container(
@@ -278,16 +275,49 @@ class _TutorialExperienceState extends State<TutorialExperience> {
                             color: scheme.onPrimaryContainer,
                           ),
                         ),
-                        if (index == 4) ...[
+                        if (index < names.length - 1) ...[
                           const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            child: FilledButton(
-                              onPressed: widget.onComplete,
-                              child: Text(t('tourFinish')),
+                          Text(
+                            t('tourTapSection')
+                                .replaceAll('{section}', t(names[index + 1])),
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                              color: scheme.onPrimaryContainer,
                             ),
                           ),
                         ],
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            if (index > 0) ...[
+                              TextButton.icon(
+                                onPressed: () => select(index - 1),
+                                icon: const Icon(Icons.chevron_left, size: 18),
+                                label: Text(t('tourBack')),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                            Expanded(
+                              child: FilledButton.icon(
+                                onPressed: index == names.length - 1
+                                    ? widget.onComplete
+                                    : () => select(index + 1),
+                                icon: Icon(
+                                  index == names.length - 1
+                                      ? Icons.check_rounded
+                                      : Icons.arrow_forward_rounded,
+                                  size: 18,
+                                ),
+                                label: Text(
+                                  index == names.length - 1
+                                      ? t('tourFinish')
+                                      : '${t('tourGoTo')} ${t(names[index + 1])}',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -313,6 +343,7 @@ class _TutorialExperienceState extends State<TutorialExperience> {
           constraints: const BoxConstraints(maxWidth: 820),
           child: CirculaNavigation(
             selectedIndex: index,
+            guidedNextIndex: index < names.length - 1 ? index + 1 : null,
             destinations: names
                 .map((n) => (t(n), Icons.circle_outlined, Icons.circle))
                 .toList(),

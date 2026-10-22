@@ -8,8 +8,10 @@ class CirculaNavigation extends StatelessWidget {
     required this.selectedIndex,
     required this.destinations,
     required this.onSelected,
+    this.guidedNextIndex,
   });
   final int selectedIndex;
+  final int? guidedNextIndex;
   final List<(String, IconData, IconData)> destinations;
   final ValueChanged<int> onSelected;
   @override
@@ -37,9 +39,12 @@ class CirculaNavigation extends StatelessWidget {
         child: Row(
           children: List.generate(destinations.length, (i) {
             final d = destinations[i], selected = selectedIndex == i;
+            final suggested = guidedNextIndex == i;
+            final enabled = guidedNextIndex == null || i <= guidedNextIndex!;
             return Expanded(
               child: Semantics(
                 selected: selected,
+                enabled: enabled,
                 button: true,
                 label: d.$1,
                 child: Tooltip(
@@ -49,27 +54,46 @@ class CirculaNavigation extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(20),
-                      onTap: () => onSelected(i),
+                      onTap: enabled ? () => onSelected(i) : null,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: ExcludeSemantics(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              if (guidedNextIndex != null)
+                                SizedBox(
+                                  height: 16,
+                                  child: suggested
+                                      ? Icon(
+                                          Icons.arrow_downward_rounded,
+                                          size: 15,
+                                          color: scheme.primary,
+                                        )
+                                      : null,
+                                ),
                               Container(
                                 width: 46,
                                 height: 29,
                                 decoration: BoxDecoration(
-                                  color: selected
+                                  color: selected || suggested
                                       ? scheme.primaryContainer
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(12),
+                                  border: suggested
+                                      ? Border.all(
+                                          color: scheme.primary,
+                                          width: 2,
+                                        )
+                                      : null,
                                 ),
                                 child: BrandNavGlyph(
                                   i,
-                                  color: selected
+                                  color: selected || suggested
                                       ? scheme.onPrimaryContainer
-                                      : scheme.onSurfaceVariant,
+                                      : scheme.onSurfaceVariant.withValues(
+                                          alpha: enabled ? 1 : .35,
+                                        ),
                                 ),
                               ),
                               const SizedBox(height: 5),
@@ -80,12 +104,14 @@ class CirculaNavigation extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 10,
                                   height: 1.2,
-                                  fontWeight: selected
+                                  fontWeight: selected || suggested
                                       ? FontWeight.w800
                                       : FontWeight.w500,
-                                  color: selected
+                                  color: selected || suggested
                                       ? scheme.onSurface
-                                      : scheme.onSurfaceVariant,
+                                      : scheme.onSurfaceVariant.withValues(
+                                          alpha: enabled ? 1 : .35,
+                                        ),
                                 ),
                               ),
                             ],

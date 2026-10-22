@@ -15,7 +15,6 @@ import 'presentation/widgets.dart';
 import 'presentation/onboarding.dart';
 import 'presentation/brand_components.dart';
 import 'presentation/circula_navigation.dart';
-import 'presentation/hologram_guide.dart';
 
 class HoyCirculaApp extends StatelessWidget {
   const HoyCirculaApp({super.key, required this.controller});
@@ -119,7 +118,6 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       ('calendar', Icons.calendar_month_outlined, Icons.calendar_month),
       ('cars', Icons.directions_car_outlined, Icons.directions_car),
       ('alerts', Icons.notifications_none_rounded, Icons.notifications_rounded),
-      ('guide', Icons.auto_stories_outlined, Icons.auto_stories_rounded),
     ];
     final page = switch (index) {
       0 => HomePage(
@@ -129,8 +127,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       ),
       1 => CalendarPage(controller: a, add: () => openVehicleForm(c, a)),
       2 => GaragePage(controller: a),
-      3 => AlertsPage(controller: a),
-      _ => const HologramGuide(),
+      _ => AlertsPage(controller: a),
     };
     return Scaffold(
       appBar: AppBar(
