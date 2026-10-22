@@ -78,7 +78,15 @@ class RulesEngine {
     if (vehicle.hologram != Hologram.none &&
         (vehicle.validUntil == null ||
             d.isAfter(civilDate(vehicle.validUntil!)))) {
-      return result(Decision.review, 'expiredVerification', extra, notices);
+      // Distinguir tres situaciones para poder explicarlas al usuario:
+      // sin vigencia capturada, constancia ya vencida hoy, o vencimiento
+      // futuro anterior a la fecha consultada.
+      final reason = vehicle.validUntil == null
+          ? 'missingValidity'
+          : civilDate(vehicle.validUntil!).isBefore(civilDate(now))
+          ? 'expiredVerification'
+          : 'validityEnds';
+      return result(Decision.review, reason, extra, notices);
     }
     final recognized =
         policy.recognized.contains(vehicle.issuer) ||

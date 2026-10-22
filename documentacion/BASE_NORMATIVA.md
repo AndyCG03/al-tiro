@@ -37,3 +37,12 @@ Valle de México del lado mexiquense está marcado como cobertura pendiente: el 
 Los campos `reviewFrom`/`reviewThrough` son la ventana de revisión del conjunto de software (julio–diciembre 2026), no la fecha de derogación legal de un decreto. Al salir de esa ventana la app pide actualización. Las reglas deberán ser cotejadas con reformas, programas semestrales, convenios y avisos vigentes antes de ofrecer un servicio operativo de autorización de circulación.
 
 No se calculan multas, tenencia ni asignaciones de holograma a partir de emisiones. Se guardan la constancia y vigencia declaradas por el usuario, sin verificar su autenticidad.
+
+## Contraste con el sitio oficial (hoynocircula.cdmx.gob.mx y ficha de SEDEMA, 22 oct 2026)
+
+- La consulta oficial pide sólo **holograma** (00, 0, 1, 2 o «Autos foráneos») y el **último dígito de la placa**. La app usa los mismos insumos (holograma + dígito de la placa) y añade entidad emisora y vigencia, necesarios para reconocer constancias de otras entidades.
+- SEDEMA indica exención ordinaria para constancias **00 por dos años** y **0 por seis meses**, salvo restricciones de la CAMe en contingencia. La app lo usa sólo como aviso no bloqueante al capturar la vigencia; no deduce la vigencia por sí sola.
+- En contingencia fase 1, SEDEMA señala que se detiene el 100 % de los hologramas 2 y el 20 % de 00 y 0 según terminación. Esto sólo se modela vía avisos oficiales versionados (feed); no se aplica por defecto.
+- Ninguna de las dos páginas define «válido hasta» ni «última verificación». La app los define como: **válido hasta** = vigencia impresa en la constancia (el último día todavía cuenta como vigente); **última verificación** = fecha en que se hizo la verificación, informativa y sin efecto en el resultado salvo validaciones de coherencia (no futura; no posterior a la vigencia).
+- La página muestra una tarjeta «Placas 1,2 · H1: par · H2: Todos» cuyo significado exacto (¿día ordinario o medida extraordinaria?) no se puede determinar sólo del texto; no se ha incorporado a las reglas.
+- Los documentos que el usuario adjunta (tarjeta de circulación, constancia, seguro, licencia) se guardan sólo en el almacenamiento privado del dispositivo; no se verifican ni intervienen en el cálculo.

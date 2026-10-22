@@ -8,6 +8,46 @@ enum VehicleAppearance { hatchback, sedan, suv, pickup, moto }
 
 enum Decision { allowed, restricted, review }
 
+enum DocumentKind { circulationCard, verification, insurance, license, other }
+
+/// Copia local de un documento (foto o PDF) asociada a un vehículo.
+/// [file] es una ruta relativa al almacenamiento privado de la app.
+class VehicleDocument {
+  const VehicleDocument({
+    required this.id,
+    required this.kind,
+    required this.title,
+    required this.file,
+    required this.addedAt,
+    this.expiresOn,
+  });
+  final String id, title, file;
+  final DocumentKind kind;
+  final DateTime addedAt;
+  final DateTime? expiresOn;
+  bool get isPdf => file.toLowerCase().endsWith('.pdf');
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'kind': kind.name,
+    'title': title,
+    'file': file,
+    'addedAt': dateKey(addedAt),
+    'expiresOn': expiresOn == null ? null : dateKey(expiresOn!),
+  };
+  factory VehicleDocument.fromJson(Map<String, dynamic> j) => VehicleDocument(
+    id: j['id'] as String,
+    kind:
+        DocumentKind.values.where((k) => k.name == j['kind']).firstOrNull ??
+        DocumentKind.other,
+    title: j['title'] as String? ?? '',
+    file: j['file'] as String,
+    addedAt: DateTime.parse(j['addedAt'] as String),
+    expiresOn: j['expiresOn'] == null
+        ? null
+        : DateTime.parse(j['expiresOn'] as String),
+  );
+}
+
 String dateKey(DateTime d) =>
     '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 DateTime civilDate(DateTime d) => DateTime(d.year, d.month, d.day);
@@ -26,8 +66,25 @@ class Vehicle {
     this.lastVerified,
     this.isPermit = false,
     this.appearance = VehicleAppearance.hatchback,
+    this.documents = const [],
   });
   final String id, name, plate, origin, issuer;
+  final List<VehicleDocument> documents;
+  Vehicle withDocuments(List<VehicleDocument> value) => Vehicle(
+    id: id,
+    name: name,
+    plate: plate,
+    modelYear: modelYear,
+    origin: origin,
+    issuer: issuer,
+    hologram: hologram,
+    kind: kind,
+    validUntil: validUntil,
+    lastVerified: lastVerified,
+    isPermit: isPermit,
+    appearance: appearance,
+    documents: value,
+  );
   final int modelYear;
   final Hologram hologram;
   final VehicleKind kind;
@@ -52,6 +109,7 @@ class Vehicle {
     'validUntil': validUntil == null ? null : dateKey(validUntil!),
     'lastVerified': lastVerified == null ? null : dateKey(lastVerified!),
     'isPermit': isPermit,
+    'documents': documents.map((d) => d.toJson()).toList(),
   };
   factory Vehicle.fromJson(Map<String, dynamic> j) => Vehicle(
     id: j['id'] as String,
@@ -74,6 +132,9 @@ class Vehicle {
         ? null
         : DateTime.parse(j['lastVerified']),
     isPermit: j['isPermit'] == true,
+    documents: ((j['documents'] as List?) ?? const [])
+        .map((e) => VehicleDocument.fromJson(Map<String, dynamic>.from(e)))
+        .toList(),
   );
 }
 

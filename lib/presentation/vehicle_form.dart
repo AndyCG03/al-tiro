@@ -78,6 +78,30 @@ class _VehicleFormState extends State<VehicleForm> {
       lastVerified = widget.vehicle?.lastVerified;
   late bool permit = widget.vehicle?.isPermit ?? false;
   bool saving = false, dateError = false;
+  String? dateProblem;
+
+  /// Aviso no bloqueante: SEDEMA indica 2 años de exención para 00 y 6 meses
+  /// para 0; una vigencia mucho mayor suele ser un error de captura.
+  bool get validityLooksLong {
+    if (validUntil == null || lastVerified == null) {
+      return false;
+    }
+    final months = switch (hologram) {
+      Hologram.doubleZero => 24,
+      Hologram.zero => 6,
+      _ => null,
+    };
+    if (months == null) {
+      return false;
+    }
+    final limit = DateTime(
+      lastVerified!.year,
+      lastVerified!.month + months,
+      lastVerified!.day + 31,
+    );
+    return validUntil!.isAfter(limit);
+  }
+
   @override
   void dispose() {
     _name.dispose();
@@ -110,7 +134,18 @@ class _VehicleFormState extends State<VehicleForm> {
     final needsDate =
         !permit && kind == VehicleKind.car && hologram != Hologram.none;
     setState(() => dateError = needsDate && validUntil == null);
-    if (!_form.currentState!.validate() || dateError) {
+    final today = civilDate(widget.controller.now);
+    final t = AppText.of(context);
+    String? problem;
+    if (lastVerified != null && lastVerified!.isAfter(today)) {
+      problem = t('lastVerifiedFuture');
+    } else if (validUntil != null &&
+        lastVerified != null &&
+        validUntil!.isBefore(lastVerified!)) {
+      problem = t('validityBeforeVerified');
+    }
+    setState(() => dateProblem = problem);
+    if (!_form.currentState!.validate() || dateError || problem != null) {
       return;
     }
     setState(() => saving = true);
@@ -129,6 +164,7 @@ class _VehicleFormState extends State<VehicleForm> {
       validUntil: validUntil,
       lastVerified: lastVerified,
       isPermit: permit,
+      documents: widget.vehicle?.documents ?? const [],
     );
     await widget.controller.saveVehicle(vehicle);
     if (mounted) {
@@ -318,6 +354,7 @@ class _VehicleFormState extends State<VehicleForm> {
                         style: TextStyle(color: Theme.of(c).colorScheme.error),
                       ),
                     ),
+                  _HelpText(t('validUntilHelp')),
                   field(
                     OutlinedButton.icon(
                       onPressed: () => pickDate(false),
@@ -327,6 +364,30 @@ class _VehicleFormState extends State<VehicleForm> {
                       ),
                     ),
                   ),
+                  _HelpText(t('lastVerifiedHelp')),
+                  if (dateProblem != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Text(
+                        dateProblem!,
+                        style: TextStyle(color: Theme.of(c).colorScheme.error),
+                      ),
+                    ),
+                  if (validityLooksLong)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Text(
+                        t('validityLongHint'),
+                        style: TextStyle(
+                          color: Theme.of(c).colorScheme.tertiary,
+                        ),
+                      ),
+                    ),
+                  if (widget.vehicle != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(t('docsVerificationTip')),
+                    ),
                   SwitchListTile.adaptive(
                     contentPadding: EdgeInsets.zero,
                     title: Text(t('permit')),
@@ -348,4 +409,20 @@ class _VehicleFormState extends State<VehicleForm> {
       ),
     );
   }
+}
+
+class _HelpText extends StatelessWidget {
+  const _HelpText(this.text);
+  final String text;
+  @override
+  Widget build(BuildContext c) => Padding(
+    padding: const EdgeInsets.only(bottom: 14),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontSize: 13,
+        color: Theme.of(c).colorScheme.onSurfaceVariant,
+      ),
+    ),
+  );
 }

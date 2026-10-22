@@ -183,6 +183,36 @@ void main() {
       Decision.restricted,
     );
   });
+  test('validity: last valid day counts, later dates explain why', () {
+    final v = car(expiry: DateTime(2026, 10, 25));
+    // El propio día de vigencia todavía es válido.
+    expect(evaluate(v, DateTime(2026, 10, 25)).reason, isNot('validityEnds'));
+    // Una fecha futura posterior al vencimiento no es "ya vencida".
+    expect(evaluate(v, DateTime(2026, 10, 26)).reason, 'validityEnds');
+    expect(evaluate(v, DateTime(2026, 10, 26)).ordinary, Decision.review);
+    // Vencida antes de hoy.
+    expect(
+      evaluate(
+        car(expiry: DateTime(2026, 10, 21)),
+        DateTime(2026, 10, 22),
+      ).reason,
+      'expiredVerification',
+    );
+  });
+  test('missing validity is reported as such', () {
+    final base = car();
+    final v = Vehicle(
+      id: base.id,
+      name: base.name,
+      plate: base.plate,
+      modelYear: base.modelYear,
+      origin: base.origin,
+      issuer: base.issuer,
+      hologram: Hologram.one,
+      kind: VehicleKind.car,
+    );
+    expect(evaluate(v, DateTime(2026, 10, 22)).reason, 'missingValidity');
+  });
   test('model year never assigns a hologram', () {
     expect(
       evaluate(car(year: 2000), DateTime(2026, 10, 22)).ordinary,

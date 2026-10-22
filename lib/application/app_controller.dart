@@ -1,15 +1,22 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import '../data/document_store.dart';
 import '../data/repositories.dart';
 import '../domain/models.dart';
 import '../domain/rules_engine.dart';
 
 class AppController extends ChangeNotifier {
-  AppController(this.repository, {this.preview = false});
+  AppController(
+    this.repository, {
+    this.preview = false,
+    DocumentStore? documentStore,
+  }) : documentStore = documentStore ?? DocumentStore();
+  final DocumentStore documentStore;
   final bool preview;
   String displayName = "";
   bool tutorialComplete = false;
@@ -161,7 +168,69 @@ class AppController extends ChangeNotifier {
     await _save();
   }
 
+  Vehicle? vehicleById(String id) =>
+      vehicles.where((v) => v.id == id).firstOrNull;
+
+  /// Guarda una copia del documento en el almacenamiento privado y la asocia
+  /// al vehículo. Lanza [FormatException] si el tipo o tamaño no son válidos.
+  Future<VehicleDocument> addDocument({
+    required String vehicleId,
+    required DocumentKind kind,
+    required String title,
+    required String extension,
+    required Uint8List bytes,
+    DateTime? expiresOn,
+  }) async {
+    final i = vehicles.indexWhere((v) => v.id == vehicleId);
+    if (i < 0) {
+      throw StateError('Vehículo desconocido');
+    }
+    final docId = DateTime.now().microsecondsSinceEpoch.toString();
+    final file = await documentStore.save(
+      vehicleId: vehicleId,
+      docId: docId,
+      extension: extension,
+      bytes: bytes,
+    );
+    final doc = VehicleDocument(
+      id: docId,
+      kind: kind,
+      title: title.trim(),
+      file: file,
+      addedAt: civilDate(now),
+      expiresOn: expiresOn == null ? null : civilDate(expiresOn),
+    );
+    vehicles[i] = vehicles[i].withDocuments([...vehicles[i].documents, doc]);
+    notifyListeners();
+    await _save();
+    return doc;
+  }
+
+  Future<void> removeDocument(String vehicleId, String docId) async {
+    final i = vehicles.indexWhere((v) => v.id == vehicleId);
+    if (i < 0) {
+      return;
+    }
+    final doc = vehicles[i].documents.where((d) => d.id == docId).firstOrNull;
+    if (doc == null) {
+      return;
+    }
+    vehicles[i] = vehicles[i].withDocuments(
+      vehicles[i].documents.where((d) => d.id != docId).toList(),
+    );
+    notifyListeners();
+    await _save();
+    try {
+      await documentStore.delete(doc.file);
+    } catch (_) {
+      // El archivo huérfano no afecta al usuario; el registro ya se eliminó.
+    }
+  }
+
   Future<void> removeVehicle(String id) async {
+    try {
+      await documentStore.deleteVehicle(id);
+    } catch (_) {}
     vehicles.removeWhere((v) => v.id == id);
     if (selectedId == id) {
       selectedId = vehicles.firstOrNull?.id;
