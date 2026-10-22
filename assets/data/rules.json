@@ -1,0 +1,208 @@
+{
+  "policies": [
+    {
+      "schemaVersion": 1,
+      "version": "2026.10.22-baseline.1",
+      "reviewFrom": "2026-07-01",
+      "reviewThrough": "2026-12-31",
+      "weekdayDigits": {
+        "1": [
+          5,
+          6
+        ],
+        "2": [
+          7,
+          8
+        ],
+        "3": [
+          3,
+          4
+        ],
+        "4": [
+          1,
+          2
+        ],
+        "5": [
+          9,
+          0
+        ]
+      },
+      "zeroOnlyIssuers": [],
+      "enabled": true,
+      "region": "cdmx",
+      "firstNumericGroup": true,
+      "fifthSaturdayReview": true,
+      "recognizedIssuers": [
+        "CDMX",
+        "MX"
+      ],
+      "sources": [
+        {
+          "id": "cdmx-hnc-2014",
+          "title": "Gaceta Oficial del Distrito Federal · 19 junio 2014 · No. 1882",
+          "url": "https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/1906201421236d2801b.pdf",
+          "sections": "IV.2–IV.4, V, VII, X y XI; páginas 8–11. Verificación y avisos vigentes se revisan por separado."
+        }
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "version": "2026.10.22-baseline.1",
+      "reviewFrom": "2026-07-01",
+      "reviewThrough": "2026-12-31",
+      "weekdayDigits": {
+        "1": [
+          5,
+          6
+        ],
+        "2": [
+          7,
+          8
+        ],
+        "3": [
+          3,
+          4
+        ],
+        "4": [
+          1,
+          2
+        ],
+        "5": [
+          9,
+          0
+        ]
+      },
+      "zeroOnlyIssuers": [
+        "GTO",
+        "MIC"
+      ],
+      "enabled": true,
+      "region": "toluca",
+      "firstNumericGroup": false,
+      "fifthSaturdayReview": true,
+      "recognizedIssuers": [
+        "CDMX",
+        "MX",
+        "HGO",
+        "MOR",
+        "PUE",
+        "QRO",
+        "TLAX"
+      ],
+      "sources": [
+        {
+          "id": "edomex-zmvt-zmst-2025",
+          "title": "Gaceta del Gobierno del Estado de México · 30 junio 2025",
+          "url": "https://legislacion.edomex.gob.mx/sites/legislacion.edomex.gob.mx/files/files/pdf/gct/2025/junio/jun301/jun301c.pdf",
+          "sections": "PRIMERO–SEXTO y OCTAVO; páginas 80–82. Calendario, reconocimiento, foráneos y exenciones."
+        }
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "version": "2026.10.22-baseline.1",
+      "reviewFrom": "2026-07-01",
+      "reviewThrough": "2026-12-31",
+      "weekdayDigits": {
+        "1": [
+          5,
+          6
+        ],
+        "2": [
+          7,
+          8
+        ],
+        "3": [
+          3,
+          4
+        ],
+        "4": [
+          1,
+          2
+        ],
+        "5": [
+          9,
+          0
+        ]
+      },
+      "zeroOnlyIssuers": [
+        "GTO",
+        "MIC"
+      ],
+      "enabled": true,
+      "region": "tianguistenco",
+      "firstNumericGroup": false,
+      "fifthSaturdayReview": true,
+      "recognizedIssuers": [
+        "CDMX",
+        "MX",
+        "HGO",
+        "MOR",
+        "PUE",
+        "QRO",
+        "TLAX"
+      ],
+      "sources": [
+        {
+          "id": "edomex-zmvt-zmst-2025",
+          "title": "Gaceta del Gobierno del Estado de México · 30 junio 2025",
+          "url": "https://legislacion.edomex.gob.mx/sites/legislacion.edomex.gob.mx/files/files/pdf/gct/2025/junio/jun301/jun301c.pdf",
+          "sections": "PRIMERO–SEXTO y OCTAVO; páginas 80–82. Calendario, reconocimiento, foráneos y exenciones."
+        }
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "version": "2026.10.22-baseline.1",
+      "reviewFrom": "2026-07-01",
+      "reviewThrough": "2026-12-31",
+      "weekdayDigits": {
+        "1": [
+          5,
+          6
+        ],
+        "2": [
+          7,
+          8
+        ],
+        "3": [
+          3,
+          4
+        ],
+        "4": [
+          1,
+          2
+        ],
+        "5": [
+          9,
+          0
+        ]
+      },
+      "zeroOnlyIssuers": [
+        "GTO",
+        "MIC"
+      ],
+      "enabled": false,
+      "region": "valleMexico",
+      "firstNumericGroup": false,
+      "fifthSaturdayReview": true,
+      "recognizedIssuers": [
+        "CDMX",
+        "MX",
+        "HGO",
+        "MOR",
+        "PUE",
+        "QRO",
+        "TLAX"
+      ],
+      "sources": [
+        {
+          "id": "edomex-zmvt-zmst-2025",
+          "title": "Gaceta del Gobierno del Estado de México · 30 junio 2025",
+          "url": "https://legislacion.edomex.gob.mx/sites/legislacion.edomex.gob.mx/files/files/pdf/gct/2025/junio/jun301/jun301c.pdf",
+          "sections": "PRIMERO–SEXTO y OCTAVO; páginas 80–82. Calendario, reconocimiento, foráneos y exenciones."
+        }
+      ]
+    }
+  ]
+}

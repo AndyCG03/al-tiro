@@ -1,0 +1,32 @@
+[
+  {
+    "file": "assets\\images\\ajolote_128.png",
+    "bytes": 4002,
+    "originalBytes": 1160328
+  },
+  {
+    "file": "assets\\images\\ajolote_256.png",
+    "bytes": 8988,
+    "originalBytes": 1160328
+  },
+  {
+    "file": "assets\\images\\ajolote_512.png",
+    "bytes": 22371,
+    "originalBytes": 1160328
+  },
+  {
+    "file": "assets\\images\\carro_160.png",
+    "bytes": 3843,
+    "originalBytes": 1277861
+  },
+  {
+    "file": "assets\\images\\carro_320.png",
+    "bytes": 8269,
+    "originalBytes": 1277861
+  },
+  {
+    "file": "assets\\images\\carro_640.png",
+    "bytes": 18896,
+    "originalBytes": 1277861
+  }
+]

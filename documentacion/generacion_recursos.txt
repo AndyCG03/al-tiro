@@ -1,0 +1,3 @@
+Herramienta integrada de generacion de imagenes.
+Los PNG publicados en assets se exportaron con Pillow para optimizacion de tamano y alfa.
+El original del logo y el original del carro se conservan en documentacion/.
