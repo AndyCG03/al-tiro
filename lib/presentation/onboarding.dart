@@ -55,7 +55,7 @@ class _NameOnboardingState extends State<NameOnboarding> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const BrandMark(size: 40),
+                    const BrandMark(size: 60),
                     const SizedBox(height: 32),
                     Center(
                       child: Container(

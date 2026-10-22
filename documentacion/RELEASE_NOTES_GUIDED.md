@@ -1,4 +1,4 @@
-# Hoy Circula MX · tutorial más guiado
+# Al Tiro · tutorial más guiado
 
 El recorrido ahora indica expresamente qué pestaña tocar y ofrece un botón «Ir a Calendario», «Ir a Mis autos» o «Ir a Alertas». La siguiente pestaña se distingue con flecha y borde; se puede volver con «Anterior» y los pasos futuros se mantienen desactivados hasta avanzar.
 

@@ -1,4 +1,4 @@
-# Hoy Circula MX
+# Al Tiro
 
 Flutter app de Sidarta. Conservar la identidad aprobada: persona amigable al volante, formas redondeadas del símbolo original; naranja #FF7900, ámbar #FFBE22, carbón #171717 y blanco, timón con carretera central; Manrope local con licencia OFL. Inspiración visual: las láminas generadas y las capturas en documentacion/capturas. Usar los PNG optimizados de assets/images para autos y marca.
 

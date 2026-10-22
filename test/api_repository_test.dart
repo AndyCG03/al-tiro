@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:hoy_circula_mx/data/repositories.dart';
-import 'package:hoy_circula_mx/domain/models.dart';
+import 'package:al_tiro/data/repositories.dart';
+import 'package:al_tiro/domain/models.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

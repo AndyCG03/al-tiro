@@ -1,4 +1,4 @@
-# Hoy Circula MX
+# Al Tiro
 
 Primera versión Flutter de la app de Sidarta. Persona amigable al volante, paleta Sidarta naranja/ámbar/carbón y recursos PNG optimizados; interfaz inspirada en las láminas de diseño.
 
@@ -13,6 +13,7 @@ Primera versión Flutter de la app de Sidarta. Persona amigable al volante, pale
 - Calendario mensual por vehículo y zona.
 - Vehículos guardados: placa, origen, emisor, holograma y vigencia; edición y eliminación.
 - Alertas y vencimientos dentro de la app.
+- Widget de pantalla de inicio (Android) en tres tamaños que se eligen solos al redimensionarlo: compacto (estado y placa), medio (estado de hoy, placa y fecha) y grande (añade la próxima restricción). Usa la paleta naranja/ámbar/carbón, símbolo + texto además de color, y modo oscuro. La app publica el resumen por el canal `mx.sidarta.al_tiro/widget`; al caducar el dato (fin del día o cambio de horario) invita a abrir la app.
 - Español / English y tema claro / oscuro / sistema, con preferencias persistentes.
 - API preparada y reglas locales con fuente y versión.
 

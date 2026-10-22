@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "mx.sidarta" "\0"
-            VALUE "FileDescription", "hoy_circula_mx" "\0"
+            VALUE "FileDescription", "al_tiro" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "hoy_circula_mx" "\0"
+            VALUE "InternalName", "al_tiro" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 mx.sidarta. All rights reserved." "\0"
-            VALUE "OriginalFilename", "hoy_circula_mx.exe" "\0"
-            VALUE "ProductName", "hoy_circula_mx" "\0"
+            VALUE "OriginalFilename", "al_tiro.exe" "\0"
+            VALUE "ProductName", "al_tiro" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

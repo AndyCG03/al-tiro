@@ -183,7 +183,7 @@ class SettingsPage extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(24),
               children: [
-                const Center(child: BrandMark(size: 84, wordmark: false)),
+                const Center(child: BrandMark(size: 126, wordmark: false)),
                 const SizedBox(height: 24),
                 Surface(
                   child: Column(

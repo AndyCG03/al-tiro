@@ -1,4 +1,4 @@
-# Identidad Sidarta — Hoy Circula MX
+# Identidad Sidarta — Al Tiro
 
 El personaje humano conserva el lenguaje redondeado del símbolo original: ojos ovalados con brillo blanco, sonrisa simple, manos sobre el timón y carretera central con dos guiones. Sustituye al ajolote por una persona amigable con cabello corto y rasgos discretos.
 

@@ -4,12 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:hoy_circula_mx/app.dart';
-import 'package:hoy_circula_mx/application/app_controller.dart';
-import 'package:hoy_circula_mx/data/repositories.dart';
-import 'package:hoy_circula_mx/domain/models.dart';
-import 'package:hoy_circula_mx/presentation/hologram_guide.dart';
-import 'package:hoy_circula_mx/presentation/vehicle_art.dart';
+import 'package:al_tiro/app.dart';
+import 'package:al_tiro/application/app_controller.dart';
+import 'package:al_tiro/data/repositories.dart';
+import 'package:al_tiro/domain/models.dart';
+import 'package:al_tiro/presentation/hologram_guide.dart';
+import 'package:al_tiro/presentation/vehicle_art.dart';
 
 void main() {
   setUp(() async {
@@ -24,9 +24,9 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     final a = AppController(BundledRepository());
     await tester.runAsync(() => a.initialize());
-    await tester.pumpWidget(HoyCirculaApp(controller: a));
+    await tester.pumpWidget(AlTiroApp(controller: a));
     await tester.pumpAndSettle();
-    expect(find.text('Hoy Circula MX'), findsOneWidget);
+    expect(find.text('Al Tiro'), findsOneWidget);
     await tester.tap(find.text('Comenzar recorrido'));
     await tester.pumpAndSettle();
     expect(find.text('Escribe al menos 2 caracteres.'), findsOneWidget);
@@ -123,7 +123,7 @@ void main() {
     expect(b.active!.displayAppearance, VehicleAppearance.suv);
     expect(b.themeMode, ThemeMode.dark);
     expect(b.language, 'en');
-    await tester.pumpWidget(HoyCirculaApp(controller: b));
+    await tester.pumpWidget(AlTiroApp(controller: b));
     await tester.pumpAndSettle();
     expect(find.text('Home'), findsWidgets);
     expect(find.text('Confirmation needed'), findsWidgets);

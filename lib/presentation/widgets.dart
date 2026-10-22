@@ -41,14 +41,14 @@ class BrandMark extends StatelessWidget {
         child: Image.asset(
           Brand.logo,
           fit: BoxFit.contain,
-          semanticLabel: 'Hoy Circula MX',
+          semanticLabel: 'Al Tiro',
         ),
       ),
       if (wordmark) ...[
         const SizedBox(width: 10),
         const Flexible(
           child: Text(
-            'Hoy Circula MX',
+            'Al Tiro',
             style: TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: 18,

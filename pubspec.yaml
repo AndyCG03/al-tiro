@@ -1,5 +1,5 @@
-name: hoy_circula_mx
-description: "Hoy Circula MX: calendario, vehiculos y fuentes oficiales."
+name: al_tiro
+description: "Al Tiro: calendario, vehiculos y fuentes oficiales."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

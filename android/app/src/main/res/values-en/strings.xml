@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Al Tiro</string>
+    <string name="widget_description">Your driving day at a glance.</string>
+    <string name="widget_placeholder_headline">Open Al Tiro to get started</string>
+    <string name="widget_placeholder_pill">Al Tiro</string>
+    <string name="widget_stale_headline">Open Al Tiro to refresh</string>
+    <string name="widget_stale_pill">Refresh</string>
+</resources>
