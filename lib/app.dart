@@ -16,14 +16,14 @@ import 'presentation/onboarding.dart';
 import 'presentation/brand_components.dart';
 import 'presentation/circula_navigation.dart';
 
-class HoyCirculaApp extends StatelessWidget {
-  const HoyCirculaApp({super.key, required this.controller});
+class AlTiroApp extends StatelessWidget {
+  const AlTiroApp({super.key, required this.controller});
   final AppController controller;
   @override
   Widget build(BuildContext c) => AnimatedBuilder(
     animation: controller,
     builder: (c, _) => MaterialApp(
-      title: 'Hoy Circula MX',
+      title: 'Al Tiro',
       debugShowCheckedModeBanner: false,
       theme: Brand.theme(Brightness.light),
       darkTheme: Brand.theme(Brightness.dark),
@@ -131,8 +131,8 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     };
     return Scaffold(
       appBar: AppBar(
-        title: const BrandMark(size: 42),
-        toolbarHeight: 78,
+        title: const BrandMark(size: 63),
+        toolbarHeight: 84,
         actions: [
           IconButton(
             onPressed: () {
@@ -242,7 +242,7 @@ class WelcomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Hoy Circula MX',
+          'Al Tiro',
           style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
         ),
         actions: [
@@ -270,7 +270,7 @@ class WelcomePage extends StatelessWidget {
                     Brand.logo,
                     width: large ? 270 : 195,
                     height: large ? 250 : 185,
-                    semanticLabel: 'Hoy Circula MX',
+                    semanticLabel: 'Al Tiro',
                   ),
                 ),
                 const SizedBox(height: 16),

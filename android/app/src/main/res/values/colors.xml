@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Identidad Al Tiro: naranja #FF7900, ámbar #FFBE22, carbón #171717 y blanco -->
+    <color name="widget_bg">#FFFFFF</color>
+    <color name="widget_text">#171717</color>
+    <color name="widget_text_secondary">#5C5C5C</color>
+    <color name="widget_orange">#FF7900</color>
+    <color name="widget_amber">#FFBE22</color>
+    <color name="widget_charcoal">#171717</color>
+    <color name="widget_allowed_bg">#171717</color>
+    <color name="widget_allowed_text">#FFBE22</color>
+</resources>

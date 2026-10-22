@@ -1,4 +1,4 @@
-# Hoy Circula MX · primera versión preliminar
+# Al Tiro · primera versión preliminar
 
 Primera app Flutter basada en la identidad del ajolote rosa, verde oscuro y blanco, con el carro minimalista generado para las tarjetas.
 
@@ -23,7 +23,7 @@ Flutter analyze sin incidencias; 35 pruebas superadas de reglas, API y widgets. 
 
 ## Archivos
 
-- `hoy-circula-mx-android-preview.apk`: APK para evaluación interna.
-- `hoy-circula-mx-web-preview.zip`: app web compilada con recursos locales.
-- `hoy-circula-mx-recursos.zip`: PNG y fuente de la identidad con licencia de la tipografía.
+- `al-tiro-android-preview.apk`: APK para evaluación interna.
+- `al-tiro-web-preview.zip`: app web compilada con recursos locales.
+- `al-tiro-recursos.zip`: PNG y fuente de la identidad con licencia de la tipografía.
 - `SHA256SUMS.txt`: comprobación de integridad de los paquetes.

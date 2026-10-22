@@ -4,6 +4,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import 'app.dart';
 import 'application/app_controller.dart';
+import 'application/widget_sync.dart';
 import 'data/repositories.dart';
 
 Future<void> main() async {
@@ -17,5 +18,6 @@ Future<void> main() async {
       : ApiRepository(baseUrl: api, fallback: bundled);
   final controller = AppController(repository);
   await controller.initialize();
-  runApp(HoyCirculaApp(controller: controller));
+  WidgetSync(controller);
+  runApp(AlTiroApp(controller: controller));
 }

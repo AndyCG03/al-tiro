@@ -142,7 +142,7 @@ class _VehicleFormState extends State<VehicleForm> {
     Widget field(Widget child) =>
         Padding(padding: const EdgeInsets.only(bottom: 18), child: child);
     return Scaffold(
-      appBar: AppBar(title: const BrandMark(size: 36)),
+      appBar: AppBar(title: const BrandMark(size: 54), toolbarHeight: 72),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(

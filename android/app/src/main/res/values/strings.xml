@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Al Tiro</string>
+    <string name="widget_description">Tu día de circulación de un vistazo.</string>
+    <string name="widget_placeholder_headline">Abre Al Tiro para empezar</string>
+    <string name="widget_placeholder_pill">Al Tiro</string>
+    <string name="widget_stale_headline">Abre Al Tiro para actualizar</string>
+    <string name="widget_stale_pill">Actualizar</string>
+</resources>

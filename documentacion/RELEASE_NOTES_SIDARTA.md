@@ -1,4 +1,4 @@
-# Hoy Circula MX · identidad Sidarta
+# Al Tiro · identidad Sidarta
 
 Esta actualización incluye cinco estilos de vehículo seleccionables (compacto, sedán, SUV, pickup y moto), guía ilustrada de hologramas, una barra flotante con símbolos propios y encabezados con la identidad del conductor.
 

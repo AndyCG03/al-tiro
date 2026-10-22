@@ -1,4 +1,4 @@
-# Hoy Circula MX · arquitectura de la primera versión
+# Al Tiro · arquitectura de la primera versión
 
 Flutter 3.47.7 / Dart 3.13.5 de la instalación existente. Paquetes resueltos con `pubspec.lock`; no se actualizó el SDK. Android, web y proyecto Windows.
 
