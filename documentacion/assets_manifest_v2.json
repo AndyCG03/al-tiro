@@ -1,0 +1,47 @@
+[
+  {
+    "file": "assets/images/vehicle_sedan.png",
+    "bytes": 12417,
+    "originalBytes": 958293
+  },
+  {
+    "file": "assets/images/vehicle_suv.png",
+    "bytes": 11546,
+    "originalBytes": 993728
+  },
+  {
+    "file": "assets/images/vehicle_pickup.png",
+    "bytes": 11310,
+    "originalBytes": 934541
+  },
+  {
+    "file": "assets/images/vehicle_moto.png",
+    "bytes": 12820,
+    "originalBytes": 728468
+  },
+  {
+    "file": "assets/images/hologram_double_zero.png",
+    "bytes": 5008,
+    "originalBytes": 1099725
+  },
+  {
+    "file": "assets/images/hologram_zero.png",
+    "bytes": 6861,
+    "originalBytes": 1074769
+  },
+  {
+    "file": "assets/images/hologram_one.png",
+    "bytes": 3105,
+    "originalBytes": 1026856
+  },
+  {
+    "file": "assets/images/hologram_two.png",
+    "bytes": 3700,
+    "originalBytes": 1059398
+  },
+  {
+    "file": "assets/images/hologram_exempt.png",
+    "bytes": 4521,
+    "originalBytes": 1017695
+  }
+]

@@ -226,7 +226,7 @@ class ResultDetail extends StatelessWidget {
                     ? Icons.check_circle_outline
                     : Icons.help_outline,
                 color: result.ordinary == Decision.restricted
-                    ? Brand.pink
+                    ? Brand.accent(c)
                     : Theme.of(c).colorScheme.primary,
               ),
               const SizedBox(width: 12),
@@ -245,7 +245,15 @@ class ResultDetail extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(t(result.reason)),
+          if (t(result.reason) !=
+              t(
+                result.ordinary == Decision.restricted
+                    ? 'ordinaryRestricted'
+                    : result.ordinary == Decision.allowed
+                    ? 'ordinaryAllowed'
+                    : 'review',
+              ))
+            Text(t(result.reason)),
           if (result.windows.isNotEmpty) ...[
             const SizedBox(height: 12),
             ...result.windows.map(

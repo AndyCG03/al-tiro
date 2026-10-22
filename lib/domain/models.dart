@@ -4,6 +4,8 @@ enum Hologram { doubleZero, zero, one, two, exempt, none }
 
 enum VehicleKind { car, motorcycle, taxi, cargo, special }
 
+enum VehicleAppearance { hatchback, sedan, suv, pickup, moto }
+
 enum Decision { allowed, restricted, review }
 
 String dateKey(DateTime d) =>
@@ -23,11 +25,18 @@ class Vehicle {
     this.validUntil,
     this.lastVerified,
     this.isPermit = false,
+    this.appearance = VehicleAppearance.hatchback,
   });
   final String id, name, plate, origin, issuer;
   final int modelYear;
   final Hologram hologram;
   final VehicleKind kind;
+  final VehicleAppearance appearance;
+  VehicleAppearance get displayAppearance => kind == VehicleKind.motorcycle
+      ? VehicleAppearance.moto
+      : appearance == VehicleAppearance.moto
+      ? VehicleAppearance.hatchback
+      : appearance;
   final DateTime? validUntil, lastVerified;
   final bool isPermit;
   Map<String, dynamic> toJson() => {
@@ -39,6 +48,7 @@ class Vehicle {
     'issuer': issuer,
     'hologram': hologram.name,
     'kind': kind.name,
+    'appearance': appearance.name,
     'validUntil': validUntil == null ? null : dateKey(validUntil!),
     'lastVerified': lastVerified == null ? null : dateKey(lastVerified!),
     'isPermit': isPermit,
@@ -52,6 +62,11 @@ class Vehicle {
     issuer: j['issuer'] as String,
     hologram: Hologram.values.byName(j['hologram'] as String),
     kind: VehicleKind.values.byName(j['kind'] as String),
+    appearance:
+        VehicleAppearance.values
+            .where((v) => v.name == j['appearance'])
+            .firstOrNull ??
+        VehicleAppearance.hatchback,
     validUntil: j['validUntil'] == null
         ? null
         : DateTime.parse(j['validUntil']),

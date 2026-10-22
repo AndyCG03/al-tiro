@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../application/app_controller.dart';
 import '../domain/models.dart';
 import '../l10n/app_text.dart';
+import 'brand_components.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
@@ -29,33 +30,53 @@ class _CalendarPageState extends State<CalendarPage> {
     }
     final days = DateTime(month.year, month.month + 1, 0).day;
     final offset = month.weekday - 1;
+    final results = List.generate(
+      days,
+      (i) => a.evaluate(DateTime(month.year, month.month, i + 1)),
+    );
+    final count = results
+        .where((r) => r?.ordinary == Decision.restricted)
+        .length;
+    final review = results
+        .where((r) => r == null || r.ordinary == Decision.review)
+        .length;
     final result = a.evaluate();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PageHeading(t('yourCalendar'), t('monthBody')),
+        BrandSectionHeader(t('yourCalendar'), t('monthBody')),
         VehicleSelector(a),
-        const SizedBox(height: 20),
+        const SizedBox(height: 18),
         Surface(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                t('ordinaryCalendar'),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 10),
               Row(
                 children: [
-                  IconButton(
+                  Expanded(
+                    child: Text(
+                      prettyDate(c, month, 'MMMM yyyy'),
+                      style: Theme.of(c).textTheme.titleLarge,
+                    ),
+                  ),
+                  IconButton.filledTonal(
                     onPressed: () => setState(
                       () => month = DateTime(month.year, month.month - 1),
                     ),
                     icon: const Icon(Icons.chevron_left),
                     tooltip: MaterialLocalizations.of(c).previousMonthTooltip,
                   ),
-                  Expanded(
-                    child: Text(
-                      prettyDate(c, month, 'MMMM yyyy'),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(c).textTheme.titleLarge,
-                    ),
-                  ),
-                  IconButton(
+                  const SizedBox(width: 6),
+                  IconButton.filledTonal(
                     onPressed: () => setState(
                       () => month = DateTime(month.year, month.month + 1),
                     ),
@@ -64,7 +85,50 @@ class _CalendarPageState extends State<CalendarPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: scheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '$count ${t('restrictedDays')}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: scheme.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                  if (review > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: scheme.outlineVariant),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '$review · ${t('reviewDay')}',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 22),
               Row(
                 children: List.generate(
                   7,
@@ -72,89 +136,101 @@ class _CalendarPageState extends State<CalendarPage> {
                     child: Center(
                       child: Text(
                         prettyDate(c, DateTime(2026, 10, 19 + i), 'E'),
-                        style: const TextStyle(
-                          fontSize: 11,
+                        style: TextStyle(
+                          fontSize: 10,
                           fontWeight: FontWeight.w800,
+                          color: scheme.onSurfaceVariant,
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: offset + days,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 7,
-                  mainAxisSpacing: 5,
+                  mainAxisSpacing: 7,
                   crossAxisSpacing: 5,
-                  childAspectRatio: .83,
+                  childAspectRatio: .72,
                 ),
                 itemBuilder: (c, i) {
                   if (i < offset) {
                     return const SizedBox.shrink();
                   }
-                  final date = DateTime(
-                        month.year,
-                        month.month,
-                        i - offset + 1,
-                      ),
-                      r = a.evaluate(
-                        DateTime(month.year, month.month, i - offset + 1),
-                      );
+                  final day = i - offset + 1,
+                      date = DateTime(month.year, month.month, i - offset + 1);
+                  final status = results[day - 1]?.ordinary ?? Decision.review;
+                  final restricted = status == Decision.restricted,
+                      pending = status == Decision.review;
                   final selected = dateKey(date) == dateKey(a.selectedDate);
-                  final status = r?.ordinary ?? Decision.review;
-                  final color = status == Decision.restricted
-                      ? Brand.pink
-                      : scheme.primary;
                   final label = t(
-                    status == Decision.restricted
+                    restricted
                         ? 'rests'
-                        : status == Decision.allowed
-                        ? 'circulates'
-                        : 'reviewShort',
+                        : pending
+                        ? 'reviewShort'
+                        : 'circulates',
                   );
+                  final foreground = restricted
+                      ? Brand.charcoal
+                      : scheme.onSurface;
                   return Semantics(
                     button: true,
                     selected: selected,
                     label: '${prettyDate(c, date)}: $label',
                     child: Tooltip(
                       message: label,
-                      child: InkWell(
+                      excludeFromSemantics: true,
+                      child: Material(
+                        color: restricted
+                            ? Brand.orange
+                            : pending
+                            ? scheme.surfaceContainerHighest
+                            : scheme.surfaceContainerLow,
                         borderRadius: BorderRadius.circular(12),
-                        onTap: () => a.setDate(date),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: color.withValues(
-                              alpha: status == Decision.restricted ? .15 : .05,
+                        child: InkWell(
+                          onTap: () => a.setDate(date),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: selected
+                                  ? Border.all(
+                                      color: scheme.onSurface,
+                                      width: 2.5,
+                                    )
+                                  : pending
+                                  ? Border.all(color: scheme.outlineVariant)
+                                  : null,
                             ),
-                            borderRadius: BorderRadius.circular(12),
-                            border: selected
-                                ? Border.all(color: scheme.primary, width: 2)
-                                : null,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '${date.day}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                ),
+                            child: ExcludeSemantics(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '$day',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: foreground,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Icon(
+                                    restricted
+                                        ? Icons.block_rounded
+                                        : pending
+                                        ? Icons.help_outline_rounded
+                                        : Icons.remove_rounded,
+                                    size: restricted || pending ? 17 : 12,
+                                    color: foreground,
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 3),
-                              Icon(
-                                status == Decision.restricted
-                                    ? Icons.block
-                                    : status == Decision.allowed
-                                    ? Icons.check_circle_outline
-                                    : Icons.help_outline,
-                                size: 15,
-                                color: color,
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
@@ -162,41 +238,74 @@ class _CalendarPageState extends State<CalendarPage> {
                   );
                 },
               ),
-              const SizedBox(height: 18),
+              const RoadDivider(),
               Wrap(
-                spacing: 12,
-                runSpacing: 8,
+                spacing: 14,
+                runSpacing: 10,
                 children: [
-                  for (final pair in [
-                    (Icons.check_circle_outline, 'circulates'),
-                    (Icons.block, 'rests'),
-                    (Icons.help_outline, 'reviewShort'),
+                  for (final entry in [
+                    (Icons.block_rounded, 'rests'),
+                    (Icons.remove_rounded, 'circulates'),
+                    (Icons.help_outline_rounded, 'reviewShort'),
                   ])
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          pair.$1,
-                          size: 15,
-                          color: pair.$2 == 'rests'
-                              ? Brand.pink
-                              : scheme.primary,
+                          entry.$1,
+                          size: 16,
+                          color: entry.$2 == 'rests'
+                              ? scheme.primary
+                              : scheme.onSurfaceVariant,
                         ),
-                        const SizedBox(width: 4),
-                        Text(t(pair.$2), style: const TextStyle(fontSize: 10)),
+                        const SizedBox(width: 5),
+                        Text(t(entry.$2), style: const TextStyle(fontSize: 10)),
                       ],
                     ),
                 ],
               ),
+              const SizedBox(height: 14),
+              Text(
+                t('calendarNote'),
+                style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
+              ),
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        if (result?.noticesConfirmed != true) ...[
+          const SizedBox(height: 14),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.cloud_off_outlined, size: 17, color: scheme.primary),
+              const SizedBox(width: 9),
+              Expanded(
+                child: Text(
+                  t('pendingCalendar'),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+        const SizedBox(height: 26),
+        Text(
+          t('selectedDayLabel'),
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 5),
         Text(
           prettyDate(c, a.selectedDate),
           style: Theme.of(c).textTheme.titleLarge,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
         if (result != null) ResultDetail(result),
         const SizedBox(height: 12),
         TextButton.icon(

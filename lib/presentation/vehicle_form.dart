@@ -4,6 +4,8 @@ import '../application/app_controller.dart';
 import '../domain/models.dart';
 import '../l10n/app_text.dart';
 import 'widgets.dart';
+import 'vehicle_art.dart';
+import 'hologram_guide.dart';
 
 const states = <String, String>{
   'CDMX': 'Ciudad de México',
@@ -70,6 +72,8 @@ class _VehicleFormState extends State<VehicleForm> {
       issuer = widget.vehicle?.issuer ?? 'CDMX';
   late Hologram hologram = widget.vehicle?.hologram ?? Hologram.one;
   late VehicleKind kind = widget.vehicle?.kind ?? VehicleKind.car;
+  late VehicleAppearance appearance =
+      widget.vehicle?.displayAppearance ?? VehicleAppearance.hatchback;
   late DateTime? validUntil = widget.vehicle?.validUntil,
       lastVerified = widget.vehicle?.lastVerified;
   late bool permit = widget.vehicle?.isPermit ?? false;
@@ -121,6 +125,7 @@ class _VehicleFormState extends State<VehicleForm> {
       issuer: issuer,
       hologram: hologram,
       kind: kind,
+      appearance: appearance,
       validUntil: validUntil,
       lastVerified: lastVerified,
       isPermit: permit,
@@ -151,6 +156,18 @@ class _VehicleFormState extends State<VehicleForm> {
                     t(widget.vehicle == null ? 'carForm' : 'editCar'),
                     t('formBody'),
                   ),
+                  VehicleArtPicker(
+                    value: appearance,
+                    onChanged: (v) => setState(() {
+                      appearance = v;
+                      if (v == VehicleAppearance.moto) {
+                        kind = VehicleKind.motorcycle;
+                      } else if (kind == VehicleKind.motorcycle) {
+                        kind = VehicleKind.car;
+                      }
+                    }),
+                  ),
+                  const SizedBox(height: 24),
                   field(
                     TextFormField(
                       controller: _name,
@@ -221,6 +238,7 @@ class _VehicleFormState extends State<VehicleForm> {
                   ),
                   field(
                     DropdownButtonFormField<VehicleKind>(
+                      key: ValueKey(kind),
                       isExpanded: true,
                       initialValue: kind,
                       decoration: InputDecoration(labelText: t('kind')),
@@ -232,7 +250,14 @@ class _VehicleFormState extends State<VehicleForm> {
                             ),
                           )
                           .toList(),
-                      onChanged: (v) => setState(() => kind = v!),
+                      onChanged: (v) => setState(() {
+                        kind = v!;
+                        if (kind == VehicleKind.motorcycle) {
+                          appearance = VehicleAppearance.moto;
+                        } else if (appearance == VehicleAppearance.moto) {
+                          appearance = VehicleAppearance.hatchback;
+                        }
+                      }),
                     ),
                   ),
                   field(
@@ -260,36 +285,20 @@ class _VehicleFormState extends State<VehicleForm> {
                   ),
                   Text(t('hologram'), style: Theme.of(c).textTheme.titleMedium),
                   const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 5,
-                    children: Hologram.values
-                        .map(
-                          (h) => ChoiceChip(
-                            label: Text(holoLabel(c, h)),
-                            selected: h == hologram,
-                            onSelected: (_) => setState(() => hologram = h),
-                          ),
-                        )
-                        .toList(),
+                  const SizedBox(height: 12),
+                  HologramPicker(
+                    value: hologram,
+                    onChanged: (h) => setState(() => hologram = h),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: () => showDialog<void>(
-                        context: c,
-                        builder: (ctx) => AlertDialog(
-                          title: Text(t('helpHologram')),
-                          content: Text(t('hologramHelp')),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(ctx),
-                              child: Text(t('done')),
-                            ),
-                          ],
-                        ),
+                    child: TextButton.icon(
+                      onPressed: () => openHologramGuide(
+                        c,
+                        onSelected: (h) => setState(() => hologram = h),
                       ),
-                      child: Text(t('helpHologram')),
+                      icon: const Icon(Icons.auto_stories_outlined, size: 18),
+                      label: Text(t('viewGuide')),
                     ),
                   ),
                   field(

@@ -12,6 +12,10 @@ import 'presentation/home_page.dart';
 import 'presentation/theme.dart';
 import 'presentation/vehicle_form.dart';
 import 'presentation/widgets.dart';
+import 'presentation/onboarding.dart';
+import 'presentation/brand_components.dart';
+import 'presentation/circula_navigation.dart';
+import 'presentation/hologram_guide.dart';
 
 class HoyCirculaApp extends StatelessWidget {
   const HoyCirculaApp({super.key, required this.controller});
@@ -77,8 +81,31 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   Widget build(BuildContext c) {
     final a = widget.controller, t = AppText.of(c);
     void settings() => Navigator.of(c).push(
-      MaterialPageRoute<void>(builder: (_) => SettingsPage(controller: a)),
+      MaterialPageRoute<void>(
+        builder: (_) => SettingsPage(
+          controller: a,
+          onTutorial: () => Navigator.of(c).push(
+            MaterialPageRoute<void>(
+              builder: (_) => TutorialExperience(
+                controller: a,
+                onComplete: () => Navigator.of(c).pop(),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
+    if (a.displayName.isEmpty) {
+      return NameOnboarding(controller: a);
+    }
+    if (!a.tutorialComplete) {
+      return TutorialExperience(
+        controller: a,
+        onComplete: () {
+          a.finishTutorial();
+        },
+      );
+    }
     if (!explored && a.vehicles.isEmpty) {
       return WelcomePage(
         add: () => openVehicleForm(c, a),
@@ -92,6 +119,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       ('calendar', Icons.calendar_month_outlined, Icons.calendar_month),
       ('cars', Icons.directions_car_outlined, Icons.directions_car),
       ('alerts', Icons.notifications_none_rounded, Icons.notifications_rounded),
+      ('guide', Icons.auto_stories_outlined, Icons.auto_stories_rounded),
     ];
     final page = switch (index) {
       0 => HomePage(
@@ -101,7 +129,8 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       ),
       1 => CalendarPage(controller: a, add: () => openVehicleForm(c, a)),
       2 => GaragePage(controller: a),
-      _ => AlertsPage(controller: a),
+      3 => AlertsPage(controller: a),
+      _ => const HologramGuide(),
     };
     return Scaffold(
       appBar: AppBar(
@@ -146,8 +175,14 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                       destinations: destinations
                           .map(
                             (d) => NavigationRailDestination(
-                              icon: Icon(d.$2),
-                              selectedIcon: Icon(d.$3),
+                              icon: BrandNavGlyph(
+                                destinations.indexOf(d),
+                                color: Theme.of(c).colorScheme.onSurfaceVariant,
+                              ),
+                              selectedIcon: BrandNavGlyph(
+                                destinations.indexOf(d),
+                                color: Theme.of(c).colorScheme.primary,
+                              ),
                               label: Text(t(d.$1)),
                             ),
                           )
@@ -185,17 +220,11 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
       ),
       bottomNavigationBar: wide
           ? null
-          : NavigationBar(
+          : CirculaNavigation(
               selectedIndex: index,
-              onDestinationSelected: (i) => setState(() => index = i),
+              onSelected: (i) => setState(() => index = i),
               destinations: destinations
-                  .map(
-                    (d) => NavigationDestination(
-                      icon: Icon(d.$2),
-                      selectedIcon: Icon(d.$3),
-                      label: t(d.$1),
-                    ),
-                  )
+                  .map((d) => (t(d.$1), d.$2, d.$3))
                   .toList(),
             ),
     );
@@ -274,7 +303,7 @@ class WelcomePage extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(11),
                           decoration: BoxDecoration(
-                            color: Brand.pink.withValues(alpha: .12),
+                            color: Brand.accent(c).withValues(alpha: .12),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Icon(

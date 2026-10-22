@@ -1,8 +1,13 @@
 # Hoy Circula MX
 
-Primera versión Flutter de la app de Sidarta. Ajolote rosa, timón verde oscuro y recursos PNG optimizados; interfaz inspirada en las láminas de diseño.
+Primera versión Flutter de la app de Sidarta. Persona amigable al volante, paleta Sidarta naranja/ámbar/carbón y recursos PNG optimizados; interfaz inspirada en las láminas de diseño.
 
 ## Funcionalidades
+
+- Bienvenida por nombre y tutorial interactivo en cinco secciones, con vehículo de ejemplo separado de los datos guardados y opción de repetir desde Ajustes.
+- Calendario ordinario con días restringidos naranjas, símbolos y resumen mensual; detalle al seleccionar una fecha.
+
+- Cinco ilustraciones seleccionables por vehículo, navegación personalizada y guía visual de hologramas 00, 0, 1, 2 y Exento. Ejemplos esquemáticos, no reproducciones oficiales.
 
 - Inicio con resultado ordinario y confirmación separada de avisos extraordinarios.
 - Calendario mensual por vehículo y zona.

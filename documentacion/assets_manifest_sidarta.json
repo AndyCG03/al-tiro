@@ -1,0 +1,32 @@
+[
+  {
+    "file": "assets/images/conductor_128.png",
+    "bytes": 2834,
+    "originalBytes": 961584
+  },
+  {
+    "file": "assets/images/conductor_256.png",
+    "bytes": 5747,
+    "originalBytes": 961584
+  },
+  {
+    "file": "assets/images/conductor_512.png",
+    "bytes": 13085,
+    "originalBytes": 961584
+  },
+  {
+    "file": "assets/images/carro_sidarta_160.png",
+    "bytes": 3834,
+    "originalBytes": 1117313
+  },
+  {
+    "file": "assets/images/carro_sidarta_320.png",
+    "bytes": 8712,
+    "originalBytes": 1117313
+  },
+  {
+    "file": "assets/images/carro_sidarta_640.png",
+    "bytes": 18954,
+    "originalBytes": 1117313
+  }
+]

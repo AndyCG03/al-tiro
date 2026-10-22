@@ -9,7 +9,10 @@ import '../domain/models.dart';
 import '../domain/rules_engine.dart';
 
 class AppController extends ChangeNotifier {
-  AppController(this.repository);
+  AppController(this.repository, {this.preview = false});
+  final bool preview;
+  String displayName = "";
+  bool tutorialComplete = false;
   final CirculationRepository repository;
   final RulesEngine engine = const RulesEngine();
   SharedPreferences? _prefs;
@@ -55,6 +58,8 @@ class AppController extends ChangeNotifier {
         vehicles = (j['vehicles'] as List)
             .map((e) => Vehicle.fromJson(Map<String, dynamic>.from(e)))
             .toList();
+        displayName = j['displayName'] as String? ?? '';
+        tutorialComplete = j['tutorialComplete'] == true;
         selectedId = j['selectedId'];
         region = Region.values.byName(j['region']);
         themeMode = ThemeMode.values.byName(j['theme']);
@@ -69,11 +74,16 @@ class AppController extends ChangeNotifier {
   }
 
   Future<void> _save() async {
+    if (preview) {
+      return;
+    }
     try {
       final ok = await _prefs?.setString(
         'hcmx_state_v1',
         jsonEncode({
           'schemaVersion': 1,
+          'displayName': displayName,
+          'tutorialComplete': tutorialComplete,
           'vehicles': vehicles.map((v) => v.toJson()).toList(),
           'selectedId': selectedId,
           'region': region.name,
@@ -113,6 +123,18 @@ class AppController extends ChangeNotifier {
     notifyListeners();
     await _save();
     await refresh();
+  }
+
+  Future<void> saveProfile(String name) async {
+    displayName = name.trim();
+    notifyListeners();
+    await _save();
+  }
+
+  Future<void> finishTutorial() async {
+    tutorialComplete = true;
+    notifyListeners();
+    await _save();
   }
 
   Future<void> setDate(DateTime value) async {
@@ -174,6 +196,7 @@ class AppController extends ChangeNotifier {
 
   @override
   void dispose() {
+    _request++;
     repository.close();
     super.dispose();
   }

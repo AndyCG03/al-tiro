@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../application/app_controller.dart';
-import '../domain/models.dart';
 import '../l10n/app_text.dart';
+import '../domain/models.dart';
 import 'vehicle_form.dart';
 import 'widgets.dart';
+import 'brand_components.dart';
+import 'vehicle_art.dart';
 
 class GaragePage extends StatelessWidget {
   const GaragePage({super.key, required this.controller});
@@ -15,7 +17,7 @@ class GaragePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PageHeading(t('cars'), t('yourCars')),
+        BrandSectionHeader(t('cars'), t('yourCars')),
         if (controller.vehicles.isEmpty)
           EmptyGarage(add: () => openVehicleForm(c, controller)),
         ...controller.vehicles.map(
@@ -27,27 +29,7 @@ class GaragePage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      if (v.kind == VehicleKind.motorcycle)
-                        Icon(
-                          Icons.two_wheeler,
-                          size: 46,
-                          color: Theme.of(c).colorScheme.primary,
-                        )
-                      else
-                        Container(
-                          width: 92,
-                          height: 68,
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: Image.asset(
-                            'assets/images/carro.png',
-                            fit: BoxFit.contain,
-                            semanticLabel: t('car'),
-                          ),
-                        ),
+                      VehicleArt(v.displayAppearance, width: 124, height: 82),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
@@ -98,7 +80,7 @@ class GaragePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 18),
+                  const RoadDivider(),
                   Plate(v.plate),
                   const SizedBox(height: 12),
                   Text(

@@ -26,7 +26,7 @@ La API sólo recibe zona y fecha; no se envía la placa ni el nombre del vehícu
 
 ## Apariencia y recursos
 
-Modo claro, oscuro o del sistema; idioma y preferencias guardados. Manrope se incluye localmente con OFL. El ajolote y el carro se generaron a partir de la identidad y de las láminas de inspiración; se exportaron PNG con alfa y variantes de tamaño. Las medidas y reducción están en `assets_manifest.json`. Los originales se conservan fuera del directorio de assets compilados.
+Modo claro, oscuro o del sistema; idioma y preferencias guardados. Manrope se incluye localmente con OFL. El conductor y el carro actuales siguen la identidad Sidarta naranja/ámbar/carbón; se conserva la composición redondeada del símbolo anterior; se exportaron PNG con alfa y variantes de tamaño. Las medidas y reducción están en `assets_manifest_sidarta.json` (identidad actual) y `assets_manifest.json` (primera versión). Los originales se conservan fuera del directorio de assets compilados.
 
 ## Qué funciona y qué queda fuera
 

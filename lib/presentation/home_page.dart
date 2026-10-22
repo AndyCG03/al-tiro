@@ -5,6 +5,7 @@ import '../domain/models.dart';
 import '../l10n/app_text.dart';
 import 'theme.dart';
 import 'widgets.dart';
+import 'brand_components.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -37,7 +38,12 @@ class HomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PageHeading(t('hello'), prettyDate(c, controller.selectedDate)),
+        BrandSectionHeader(
+          controller.displayName.isEmpty
+              ? t('hello')
+              : '${t('greeting')} ${controller.displayName}.',
+          prettyDate(c, controller.selectedDate),
+        ),
         DropdownButtonFormField<Region>(
           key: ValueKey(controller.region),
           initialValue: controller.region,
@@ -68,8 +74,8 @@ class HomePage extends StatelessWidget {
           const SizedBox(height: 20),
           Surface(
             color: nowDecision == Decision.allowed && sameDay
-                ? Brand.green
-                : Brand.pink.withValues(alpha: .10),
+                ? scheme.primaryContainer
+                : Brand.accent(c).withValues(alpha: .10),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -83,7 +89,7 @@ class HomePage extends StatelessWidget {
                         : Icons.fact_check_outlined,
                     size: 48,
                     color: nowDecision == Decision.allowed && sameDay
-                        ? Colors.white
+                        ? scheme.onPrimaryContainer
                         : scheme.primary,
                   ),
                   const SizedBox(height: 16),
@@ -97,7 +103,7 @@ class HomePage extends StatelessWidget {
                     ),
                     style: Theme.of(c).textTheme.headlineLarge?.copyWith(
                       color: nowDecision == Decision.allowed && sameDay
-                          ? Colors.white
+                          ? scheme.onPrimaryContainer
                           : scheme.onSurface,
                     ),
                   ),
@@ -112,7 +118,7 @@ class HomePage extends StatelessWidget {
                     ),
                     style: TextStyle(
                       color: nowDecision == Decision.allowed && sameDay
-                          ? Colors.white
+                          ? scheme.onPrimaryContainer
                           : scheme.onSurface,
                       fontWeight: FontWeight.w600,
                     ),
@@ -124,7 +130,7 @@ class HomePage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         color: nowDecision == Decision.allowed && sameDay
-                            ? Colors.white70
+                            ? scheme.onPrimaryContainer.withValues(alpha: .75)
                             : scheme.onSurfaceVariant,
                       ),
                     ),
@@ -139,7 +145,7 @@ class HomePage extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.info_outline, color: Brand.pink),
+                  Icon(Icons.info_outline, color: Brand.accent(c)),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -165,9 +171,9 @@ class HomePage extends StatelessWidget {
             Surface(
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.event_busy_outlined,
-                    color: Brand.pink,
+                    color: Brand.accent(c),
                     size: 30,
                   ),
                   const SizedBox(width: 16),
@@ -218,7 +224,7 @@ class HomePage extends StatelessWidget {
           label: Text(t('source')),
         ),
         if (controller.storageWarning)
-          Text(t('storageWarning'), style: const TextStyle(color: Brand.pink)),
+          Text(t('storageWarning'), style: TextStyle(color: Brand.accent(c))),
       ],
     );
   }

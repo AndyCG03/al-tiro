@@ -5,6 +5,7 @@ import '../domain/models.dart';
 import '../l10n/app_text.dart';
 import 'theme.dart';
 import 'widgets.dart';
+import 'brand_components.dart';
 
 class AlertsPage extends StatelessWidget {
   const AlertsPage({super.key, required this.controller});
@@ -27,16 +28,16 @@ class AlertsPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PageHeading(t('yourAlerts'), t('alertBody')),
+        BrandSectionHeader(t('yourAlerts'), t('alertBody')),
         if (a.extraordinary) ...[
           Surface(
-            color: Brand.pink.withValues(alpha: .09),
+            color: Brand.accent(c).withValues(alpha: .09),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
+                Icon(
                   Icons.notifications_active_outlined,
-                  color: Brand.pink,
+                  color: Brand.accent(c),
                   size: 32,
                 ),
                 const SizedBox(height: 12),
@@ -99,7 +100,7 @@ class AlertsPage extends StatelessWidget {
                   ...nextDays.map(
                     (d) => ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.event_busy, color: Brand.pink),
+                      leading: Icon(Icons.event_busy, color: Brand.accent(c)),
                       title: Text(prettyDate(c, d, 'EEEE d MMM')),
                       subtitle: Text('${a.active?.name} · 05:00–22:00'),
                     ),
@@ -114,9 +115,9 @@ class AlertsPage extends StatelessWidget {
               child: Surface(
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.assignment_late_outlined,
-                    color: Brand.pink,
+                    color: Brand.accent(c),
                   ),
                   title: Text(
                     t(
@@ -166,7 +167,8 @@ class AlertsPage extends StatelessWidget {
 }
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key, required this.controller});
+  const SettingsPage({super.key, required this.controller, this.onTutorial});
+  final VoidCallback? onTutorial;
   final AppController controller;
   @override
   Widget build(BuildContext c) {
@@ -257,6 +259,13 @@ class SettingsPage extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: 16),
+                if (onTutorial != null)
+                  OutlinedButton.icon(
+                    onPressed: onTutorial,
+                    icon: const Icon(Icons.explore_outlined),
+                    label: Text(t('repeatTutorial')),
+                  ),
                 const SizedBox(height: 24),
                 Center(child: Text(t('about'))),
               ],

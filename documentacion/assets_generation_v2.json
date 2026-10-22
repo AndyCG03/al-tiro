@@ -1,0 +1,56 @@
+[
+  {
+    "type": "vehicle",
+    "id": "sedan",
+    "source": "C:\\Users\\andyc\\.codex\\generated_images\\01a16479-3d5f-77a1-8b88-03cf773fc0f2\\exec-19e571d2-e8f2-4366-ba9f-be5ffaef4c91.png",
+    "prompt": "Use case: logo-brand. Generate ONE transparent PNG illustration for the Hoy Circula MX app vehicle selector: compact four-door sedan with a distinct separate rear trunk. Entire vehicle visible in front three-quarter view facing right. Match a cohesive minimalist rounded flat vector asset set: golden amber #FFBE22 body, tiny Sidarta orange #FF7900 accents, charcoal #171717 outlines and tires, opaque white windows/highlights. Large simple geometric shapes, consistent thick strokes, minimal details, no realistic reflections, no gradients, no glow, no shadows, no scene or road, no badges or manufacturer logos, no text or license numbers. Professional clean app resource recognizable at 100px wide. Genuine transparent background alpha. Wide 2:1 canvas and generous 10% padding. Only one vehicle, not a sheet."
+  },
+  {
+    "type": "vehicle",
+    "id": "suv",
+    "source": "C:\\Users\\andyc\\.codex\\generated_images\\01a16479-3d5f-77a1-8b88-03cf773fc0f2\\exec-244bbd87-7b1c-4060-8089-acf93e180034.png",
+    "prompt": "Use case: logo-brand. Generate ONE transparent PNG illustration for the Hoy Circula MX app vehicle selector: small family SUV, tall cabin and upright rear hatch. Entire vehicle visible in front three-quarter view facing right. Match a cohesive minimalist rounded flat vector asset set: golden amber #FFBE22 body, tiny Sidarta orange #FF7900 accents, charcoal #171717 outlines and tires, opaque white windows/highlights. Large simple geometric shapes, consistent thick strokes, minimal details, no realistic reflections, no gradients, no glow, no shadows, no scene or road, no badges or manufacturer logos, no text or license numbers. Professional clean app resource recognizable at 100px wide. Genuine transparent background alpha. Wide 2:1 canvas and generous 10% padding. Only one vehicle, not a sheet."
+  },
+  {
+    "type": "vehicle",
+    "id": "pickup",
+    "source": "C:\\Users\\andyc\\.codex\\generated_images\\01a16479-3d5f-77a1-8b88-03cf773fc0f2\\exec-b17a425d-0e21-443c-b058-02de960115f8.png",
+    "prompt": "Use case: logo-brand. Generate ONE transparent PNG illustration for the Hoy Circula MX app vehicle selector: compact pickup truck, two-door cabin and clearly visible open cargo bed. Entire vehicle visible in front three-quarter view facing right. Match a cohesive minimalist rounded flat vector asset set: golden amber #FFBE22 body, tiny Sidarta orange #FF7900 accents, charcoal #171717 outlines and tires, opaque white windows/highlights. Large simple geometric shapes, consistent thick strokes, minimal details, no realistic reflections, no gradients, no glow, no shadows, no scene or road, no badges or manufacturer logos, no text or license numbers. Professional clean app resource recognizable at 100px wide. Genuine transparent background alpha. Wide 2:1 canvas and generous 10% padding. Only one vehicle, not a sheet."
+  },
+  {
+    "type": "vehicle",
+    "id": "moto",
+    "source": "C:\\Users\\andyc\\.codex\\generated_images\\01a16479-3d5f-77a1-8b88-03cf773fc0f2\\exec-e760a1c5-ec7c-45a4-a675-7d372ba84ad6.png",
+    "prompt": "Use case: logo-brand. Generate ONE transparent PNG illustration for the Hoy Circula MX app vehicle selector: urban motorcycle with two wheels, a simple seat, handlebar and headlight, no rider. Entire vehicle visible in front three-quarter view facing right. Match a cohesive minimalist rounded flat vector asset set: golden amber #FFBE22 body, tiny Sidarta orange #FF7900 accents, charcoal #171717 outlines and tires, opaque white windows/highlights. Large simple geometric shapes, consistent thick strokes, minimal details, no realistic reflections, no gradients, no glow, no shadows, no scene or road, no badges or manufacturer logos, no text or license numbers. Professional clean app resource recognizable at 100px wide. Genuine transparent background alpha. Wide 2:1 canvas and generous 10% padding. Only one vehicle, not a sheet."
+  },
+  {
+    "type": "holo",
+    "id": "double_zero",
+    "source": "C:\\Users\\andyc\\.codex\\generated_images\\01a16479-3d5f-77a1-8b88-03cf773fc0f2\\exec-aaf2ab0b-4337-44de-8ba2-6e31dc2bd6ee.png",
+    "prompt": "Use case: illustration-story. One minimalist educational reference illustration for an app explaining Mexican vehicle verification hologram categories. Show a generic stylized rectangular windshield sticker card with softly rounded corners, a wide charcoal header with tiny white car icon, warm white body and one huge perfectly readable charcoal symbol \"00\" centered. Narrow orange #FF7900 stripe at bottom, small amber #FFBE22 corner tab. No extra digits or words. No state branding or coat of arms, no official seals, no QR, no serial numbers, no dates, no security patterns. This is a simplified educational pictogram, NOT an authentic document reproduction. Flat vector style, no shadows, no gradients, no texture. Genuine transparent background. Landscape 3:2 composition and clear padding. Match the same layout across category symbols. Clean geometric shapes, readable at 120px wide. Only one card."
+  },
+  {
+    "type": "holo",
+    "id": "zero",
+    "source": "C:\\Users\\andyc\\.codex\\generated_images\\01a16479-3d5f-77a1-8b88-03cf773fc0f2\\exec-5791557b-d511-4efa-a88d-d460e5679281.png",
+    "prompt": "Use case: illustration-story. One minimalist educational reference illustration for an app explaining Mexican vehicle verification hologram categories. Show a generic stylized rectangular windshield sticker card with softly rounded corners, a wide charcoal header with tiny white car icon, warm white body and one huge perfectly readable charcoal symbol \"0\" centered. Narrow orange #FF7900 stripe at bottom, small amber #FFBE22 corner tab. No extra digits or words. No state branding or coat of arms, no official seals, no QR, no serial numbers, no dates, no security patterns. This is a simplified educational pictogram, NOT an authentic document reproduction. Flat vector style, no shadows, no gradients, no texture. Genuine transparent background. Landscape 3:2 composition and clear padding. Match the same layout across category symbols. Clean geometric shapes, readable at 120px wide. Only one card."
+  },
+  {
+    "type": "holo",
+    "id": "one",
+    "source": "C:\\Users\\andyc\\.codex\\generated_images\\01a16479-3d5f-77a1-8b88-03cf773fc0f2\\exec-42b297c0-d648-49da-aa76-0a07972d2c4c.png",
+    "prompt": "Use case: illustration-story. One minimalist educational reference illustration for an app explaining Mexican vehicle verification hologram categories. Show a generic stylized rectangular windshield sticker card with softly rounded corners, a wide charcoal header with tiny white car icon, warm white body and one huge perfectly readable charcoal symbol \"1\" centered. Narrow orange #FF7900 stripe at bottom, small amber #FFBE22 corner tab. No extra digits or words. No state branding or coat of arms, no official seals, no QR, no serial numbers, no dates, no security patterns. This is a simplified educational pictogram, NOT an authentic document reproduction. Flat vector style, no shadows, no gradients, no texture. Genuine transparent background. Landscape 3:2 composition and clear padding. Match the same layout across category symbols. Clean geometric shapes, readable at 120px wide. Only one card."
+  },
+  {
+    "type": "holo",
+    "id": "two",
+    "source": "C:\\Users\\andyc\\.codex\\generated_images\\01a16479-3d5f-77a1-8b88-03cf773fc0f2\\exec-ca9287f0-316c-4109-95d7-9ec2ddd14c9d.png",
+    "prompt": "Use case: illustration-story. One minimalist educational reference illustration for an app explaining Mexican vehicle verification hologram categories. Show a generic stylized rectangular windshield sticker card with softly rounded corners, a wide charcoal header with tiny white car icon, warm white body and one huge perfectly readable charcoal symbol \"2\" centered. Narrow orange #FF7900 stripe at bottom, small amber #FFBE22 corner tab. No extra digits or words. No state branding or coat of arms, no official seals, no QR, no serial numbers, no dates, no security patterns. This is a simplified educational pictogram, NOT an authentic document reproduction. Flat vector style, no shadows, no gradients, no texture. Genuine transparent background. Landscape 3:2 composition and clear padding. Match the same layout across category symbols. Clean geometric shapes, readable at 120px wide. Only one card."
+  },
+  {
+    "type": "holo",
+    "id": "exempt",
+    "source": "C:\\Users\\andyc\\.codex\\generated_images\\01a16479-3d5f-77a1-8b88-03cf773fc0f2\\exec-161679ef-1f50-415c-95b9-805e77e66109.png",
+    "prompt": "Use case: illustration-story. One minimalist educational reference illustration for an app explaining Mexican vehicle verification hologram categories. Show a generic stylized rectangular windshield sticker card with softly rounded corners, a wide charcoal header with tiny white car icon, warm white body and one huge perfectly readable charcoal symbol \"E\" centered. Narrow orange #FF7900 stripe at bottom, small amber #FFBE22 corner tab. No extra digits or words. No state branding or coat of arms, no official seals, no QR, no serial numbers, no dates, no security patterns. This is a simplified educational pictogram, NOT an authentic document reproduction. Flat vector style, no shadows, no gradients, no texture. Genuine transparent background. Landscape 3:2 composition and clear padding. Match the same layout across category symbols. Clean geometric shapes, readable at 120px wide. Only one card."
+  }
+]
