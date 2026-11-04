@@ -35,6 +35,56 @@ void main() {
     kind: VehicleKind.car,
   );
 
+  testWidgets(
+    'a vehicle photo survives editing and is cleaned up on replacement',
+    (tester) async {
+      final store = DocumentStore(root: () async => tmp);
+      final controller = AppController(
+        BundledRepository(),
+        documentStore: store,
+      );
+      await tester.runAsync(() async {
+        await controller.initialize();
+        await controller.saveVehicle(
+          Vehicle.fromJson(car.toJson()..remove('photoPath')),
+        );
+        await controller.saveVehiclePhoto(
+          car.id,
+          Uint8List.fromList([1, 2, 3]),
+          'jpg',
+        );
+        final first = await store.resolve(
+          controller.vehicleById(car.id)!.photoPath,
+        );
+        await controller.saveVehicle(car);
+        final reopened = AppController(
+          BundledRepository(),
+          documentStore: store,
+        );
+        await reopened.initialize();
+        expect(
+          await (await store.resolve(reopened.vehicleById(car.id)!.photoPath))
+              .readAsBytes(),
+          [1, 2, 3],
+        );
+        await reopened.saveVehiclePhoto(
+          car.id,
+          Uint8List.fromList([4, 5]),
+          'jpg',
+        );
+        expect(await first.exists(), isFalse);
+        final second = await store.resolve(
+          reopened.vehicleById(car.id)!.photoPath,
+        );
+        await reopened.removeVehiclePhoto(car.id);
+        expect(reopened.vehicleById(car.id)!.photoPath, isEmpty);
+        expect(await second.exists(), isFalse);
+        reopened.dispose();
+      });
+      controller.dispose();
+    },
+  );
+
   testWidgets('maintenance survives vehicle edits and reopening', (
     tester,
   ) async {

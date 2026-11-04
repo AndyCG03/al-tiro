@@ -186,6 +186,13 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Mis autos'));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Asistencia y trámites'));
+    await tester.tap(find.text('Asistencia y trámites'));
+    await tester.pumpAndSettle();
+    expect(find.text('Cita de verificación'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tapAt(const Offset(20, 50));
+    await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Mantenimiento'));
     await tester.tap(find.text('Mantenimiento'));
     await tester.pumpAndSettle();

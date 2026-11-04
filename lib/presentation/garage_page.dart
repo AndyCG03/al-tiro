@@ -6,7 +6,7 @@ import '../domain/models.dart';
 import 'vehicle_form.dart';
 import 'widgets.dart';
 import 'brand_components.dart';
-import 'vehicle_art.dart';
+import 'vehicle_portrait.dart';
 import 'documents_page.dart';
 import 'maintenance_page.dart';
 
@@ -24,6 +24,7 @@ class GaragePage extends StatelessWidget {
           EmptyGarage(add: () => openVehicleForm(c, controller)),
         ...controller.vehicles.map(
           (v) => Padding(
+            key: ValueKey(v.id),
             padding: const EdgeInsets.only(bottom: 18),
             child: Surface(
               child: Column(
@@ -31,7 +32,7 @@ class GaragePage extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      VehicleArt(v.displayAppearance, width: 124, height: 82),
+                      VehiclePortrait(controller: controller, vehicle: v),
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
@@ -49,6 +50,19 @@ class GaragePage extends StatelessWidget {
                         onSelected: (action) async {
                           if (action == 'edit') {
                             openVehicleForm(c, controller, v);
+                          } else if (action == 'removePhoto') {
+                            final messenger = ScaffoldMessenger.of(c);
+                            try {
+                              await controller.removeVehiclePhoto(v.id);
+                            } catch (_) {
+                              if (c.mounted) {
+                                messenger.showSnackBar(
+                                  SnackBar(
+                                    content: Text(t('vehiclePhotoError')),
+                                  ),
+                                );
+                              }
+                            }
                           } else {
                             final remove = await showDialog<bool>(
                               context: c,
@@ -74,6 +88,11 @@ class GaragePage extends StatelessWidget {
                         },
                         itemBuilder: (_) => [
                           PopupMenuItem(value: 'edit', child: Text(t('edit'))),
+                          if (v.photoPath.isNotEmpty)
+                            PopupMenuItem(
+                              value: 'removePhoto',
+                              child: Text(t('removeVehiclePhoto')),
+                            ),
                           PopupMenuItem(
                             value: 'delete',
                             child: Text(t('delete')),
@@ -111,67 +130,13 @@ class GaragePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ExpansionTile(
-                    tilePadding: EdgeInsets.zero,
-                    leading: const Icon(Icons.support_agent_outlined),
-                    title: Text(t('assistanceAndServices')),
-                    children: [
-                      if (v.insurer.isNotEmpty)
-                        ListTile(
-                          title: Text(t('insurer')),
-                          subtitle: Text(v.insurer),
-                        ),
-                      if (v.policyNumber.isNotEmpty)
-                        ListTile(
-                          title: Text(t('policyNumber')),
-                          subtitle: Text(v.policyNumber),
-                        ),
-                      if (v.assistancePhone.isNotEmpty)
-                        ListTile(
-                          title: Text(t('callAssistance')),
-                          subtitle: Text(v.assistancePhone),
-                          leading: const Icon(Icons.phone_outlined),
-                          onTap: () => openOfficial(
-                            c,
-                            Uri(
-                              scheme: 'tel',
-                              path: v.assistancePhone.replaceAll(
-                                RegExp(r'[ ()-]'),
-                                '',
-                              ),
-                            ).toString(),
-                          ),
-                        ),
-                      if (v.insurer.isEmpty &&
-                          v.policyNumber.isEmpty &&
-                          v.assistancePhone.isEmpty)
-                        TextButton(
-                          onPressed: () => openVehicleForm(c, controller, v),
-                          child: Text(t('addAssistance')),
-                        ),
-                      if (v.origin == 'CDMX' || v.origin == 'MX') ...[
-                        ListTile(
-                          leading: const Icon(Icons.open_in_new),
-                          title: Text(t('verificationAppointment')),
-                          onTap: () => openOfficial(
-                            c,
-                            v.origin == 'CDMX'
-                                ? 'https://citasverificentros.cdmx.gob.mx/'
-                                : 'https://citaverificacion.edomex.gob.mx/RegistroCitas/registroVehiculoParticular?opcion=opcionesCita',
-                          ),
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.open_in_new),
-                          title: Text(t('vehicleFees')),
-                          onTap: () => openOfficial(
-                            c,
-                            v.origin == 'CDMX'
-                                ? 'https://data.finanzas.cdmx.gob.mx/consulta_adeudos'
-                                : 'https://pagosytramites.edomex.gob.mx/controlv/Recaudacion/centro.jsp',
-                          ),
-                        ),
-                      ],
-                    ],
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.support_agent_outlined, size: 20),
+                      label: Text(t('assistanceAndServices')),
+                      onPressed: () => _openAssistance(c, v),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
@@ -222,6 +187,81 @@ class GaragePage extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+
+  Future<void> _openAssistance(BuildContext c, Vehicle v) {
+    final t = AppText.of(c);
+    return showModalBottomSheet<void>(
+      context: c,
+      showDragHandle: true,
+      useSafeArea: true,
+      isScrollControlled: true,
+      builder: (sheet) => SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              t('assistanceAndServices'),
+              style: Theme.of(sheet).textTheme.titleLarge,
+            ),
+            if (v.insurer.isNotEmpty)
+              ListTile(title: Text(t('insurer')), subtitle: Text(v.insurer)),
+            if (v.policyNumber.isNotEmpty)
+              ListTile(
+                title: Text(t('policyNumber')),
+                subtitle: Text(v.policyNumber),
+              ),
+            if (v.assistancePhone.isNotEmpty)
+              ListTile(
+                title: Text(t('callAssistance')),
+                subtitle: Text(v.assistancePhone),
+                leading: const Icon(Icons.phone_outlined),
+                onTap: () => openOfficial(
+                  c,
+                  Uri(
+                    scheme: 'tel',
+                    path: v.assistancePhone.replaceAll(RegExp(r'[ ()-]'), ''),
+                  ).toString(),
+                ),
+              ),
+            if (v.insurer.isEmpty &&
+                v.policyNumber.isEmpty &&
+                v.assistancePhone.isEmpty)
+              TextButton(
+                onPressed: () {
+                  Navigator.of(sheet).pop();
+                  openVehicleForm(c, controller, v);
+                },
+                child: Text(t('addAssistance')),
+              ),
+            if (v.origin == 'CDMX' || v.origin == 'MX') ...[
+              ListTile(
+                leading: const Icon(Icons.open_in_new),
+                title: Text(t('verificationAppointment')),
+                onTap: () => openOfficial(
+                  c,
+                  v.origin == 'CDMX'
+                      ? 'https://citasverificentros.cdmx.gob.mx/'
+                      : 'https://citaverificacion.edomex.gob.mx/RegistroCitas/registroVehiculoParticular?opcion=opcionesCita',
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.open_in_new),
+                title: Text(t('vehicleFees')),
+                onTap: () => openOfficial(
+                  c,
+                  v.origin == 'CDMX'
+                      ? 'https://data.finanzas.cdmx.gob.mx/consulta_adeudos'
+                      : 'https://pagosytramites.edomex.gob.mx/controlv/Recaudacion/centro.jsp',
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

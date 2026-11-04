@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:al_tiro/application/circulation_notifications.dart';
 import 'package:al_tiro/domain/models.dart';
 import 'package:al_tiro/domain/rules_engine.dart';
 
@@ -86,6 +87,37 @@ void main() {
     expect(r.atMinute(1319), Decision.restricted);
     expect(r.atMinute(1320), Decision.allowed);
   });
+  test(
+    'notification requires confirmed data and expires at the next boundary',
+    () {
+      final date = DateTime(2026, 10, 19);
+      final beforeEnd = DateTime(2026, 10, 19, 21, 59, 40);
+      final end = DateTime(2026, 10, 19, 22);
+      final result = evaluate(car(), date);
+      expect(notificationDecision(result, beforeEnd), Decision.restricted);
+      expect(notificationDecision(result, end), Decision.allowed);
+      expect(
+        notificationDecision(evaluate(car(), date, fresh: false), end),
+        Decision.review,
+      );
+      expect(
+        notificationLifetime(
+          result,
+          end.add(const Duration(hours: 1)),
+          beforeEnd,
+        ),
+        const Duration(seconds: 20),
+      );
+      expect(
+        notificationLifetime(
+          result,
+          beforeEnd.add(const Duration(seconds: 5)),
+          beforeEnd,
+        ),
+        const Duration(seconds: 5),
+      );
+    },
+  );
   test('hologram 1 follows both Saturday parity patterns', () {
     for (final day in [3, 17]) {
       expect(

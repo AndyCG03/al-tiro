@@ -128,16 +128,19 @@ class Vehicle {
     this.insurer = '',
     this.policyNumber = '',
     this.assistancePhone = '',
+    this.photoPath = '',
   });
   final String id, name, plate, origin, issuer;
   final List<VehicleDocument> documents;
   final List<MaintenanceEntry> maintenance;
   final String insurer, policyNumber, assistancePhone;
+  final String photoPath;
   Vehicle withDocuments(List<VehicleDocument> value) =>
       withRecords(documents: value);
   Vehicle withRecords({
     List<VehicleDocument>? documents,
     List<MaintenanceEntry>? maintenance,
+    String? photoPath,
   }) => Vehicle(
     id: id,
     name: name,
@@ -156,6 +159,7 @@ class Vehicle {
     insurer: insurer,
     policyNumber: policyNumber,
     assistancePhone: assistancePhone,
+    photoPath: photoPath ?? this.photoPath,
   );
   final int modelYear;
   final Hologram hologram;
@@ -186,6 +190,7 @@ class Vehicle {
     'insurer': insurer,
     'policyNumber': policyNumber,
     'assistancePhone': assistancePhone,
+    'photoPath': photoPath,
   };
   factory Vehicle.fromJson(Map<String, dynamic> j) => Vehicle(
     id: j['id'] as String,
@@ -217,6 +222,7 @@ class Vehicle {
     insurer: j['insurer'] as String? ?? '',
     policyNumber: j['policyNumber'] as String? ?? '',
     assistancePhone: j['assistancePhone'] as String? ?? '',
+    photoPath: j['photoPath'] as String? ?? '',
   );
 }
 

@@ -56,7 +56,8 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     timer = Timer.periodic(const Duration(minutes: 1), (_) {
-      if (mounted) {
+      if (mounted &&
+          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
         widget.controller.refresh();
       }
     });

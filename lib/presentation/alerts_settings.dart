@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../application/app_controller.dart';
+import '../application/circulation_notifications.dart';
 import '../domain/models.dart';
 import '../l10n/app_text.dart';
 import 'theme.dart';
@@ -248,6 +249,28 @@ class AlertsPage extends StatelessWidget {
                 value: a.extraordinary,
                 onChanged: a.setExtraordinary,
               ),
+              if (CirculationNotifications.supported && !a.preview)
+                SwitchListTile.adaptive(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(t('circulationNotifications')),
+                  subtitle: Text(t('circulationNotificationsHelp')),
+                  value: a.circulationNotifications,
+                  onChanged: (enabled) async {
+                    if (enabled &&
+                        !await CirculationNotifications.requestPermission()) {
+                      if (c.mounted) {
+                        ScaffoldMessenger.of(c).showSnackBar(
+                          SnackBar(
+                            content: Text(t('circulationNotificationsDenied')),
+                          ),
+                        );
+                      }
+                      return;
+                    }
+                    await a.setCirculationNotifications(enabled);
+                    if (!enabled) await CirculationNotifications.clear();
+                  },
+                ),
               Text(
                 t('noNotifications'),
                 style: Theme.of(c).textTheme.bodyMedium,

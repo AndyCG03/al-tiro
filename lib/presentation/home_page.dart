@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 import '../application/app_controller.dart';
 import '../domain/models.dart';
@@ -21,6 +22,7 @@ class HomePage extends StatelessWidget {
     final t = AppText.of(c), scheme = Theme.of(c).colorScheme;
     final result = controller.evaluate();
     final v = controller.active;
+    final officialCheck = controller.snapshot?.feed.checkedAt;
     final sameDay = dateKey(controller.selectedDate) == dateKey(controller.now);
     final nowDecision = result?.atMinute(
       controller.now.hour * 60 + controller.now.minute,
@@ -71,6 +73,19 @@ class HomePage extends StatelessWidget {
           EmptyGarage(add: add)
         else ...[
           VehicleSelector(controller),
+          const SizedBox(height: 10),
+          OutlinedButton.icon(
+            onPressed: controller.loading
+                ? null
+                : () => controller.setDate(civilDate(controller.now)),
+            icon: controller.loading
+                ? const SizedBox.square(
+                    dimension: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.refresh),
+            label: Text(t(controller.loading ? 'checkingToday' : 'checkToday')),
+          ),
           const SizedBox(height: 20),
           Surface(
             color: nowDecision == Decision.allowed && sameDay
@@ -123,10 +138,11 @@ class HomePage extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  if (sameDay) ...[
+                  if (controller.lastCheckedAt case final checked?) ...[
                     const SizedBox(height: 8),
                     Text(
-                      '${controller.now.hour.toString().padLeft(2, '0')}:${controller.now.minute.toString().padLeft(2, '0')} · ${t('asOf')}',
+                      '${t(controller.snapshot?.remote == true ? 'lastApiCheck' : 'lastLocalCheck')} '
+                      '${MaterialLocalizations.of(c).formatTimeOfDay(TimeOfDay.fromDateTime(checked))} (CDMX)',
                       style: TextStyle(
                         fontSize: 12,
                         color: nowDecision == Decision.allowed && sameDay
@@ -135,6 +151,11 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ],
+                  if (result?.noticesConfirmed == true && officialCheck != null)
+                    Text(
+                      '${t('officialCheckConfirmed')} '
+                      '${MaterialLocalizations.of(c).formatTimeOfDay(TimeOfDay.fromDateTime(tz.TZDateTime.from(officialCheck, tz.getLocation('America/Mexico_City'))))} (CDMX)',
+                    ),
                 ],
               ),
             ),

@@ -4,6 +4,7 @@ import 'package:timezone/data/latest.dart' as tz_data;
 
 import 'app.dart';
 import 'application/app_controller.dart';
+import 'application/circulation_notifications.dart';
 import 'application/widget_sync.dart';
 import 'data/repositories.dart';
 
@@ -22,5 +23,6 @@ Future<void> main() async {
   final controller = AppController(repository);
   await controller.initialize();
   WidgetSync(controller);
+  CirculationNotifications(controller);
   runApp(AlTiroApp(controller: controller));
 }

@@ -30,9 +30,12 @@ class AppController extends ChangeNotifier {
   String language = 'es';
   bool reminders = true,
       extraordinary = true,
+      circulationNotifications = false,
       loading = false,
       storageWarning = false;
   DataSnapshot? snapshot;
+  DateTime? lastCheckedAt;
+  final _photoChanges = <String>{};
   int _request = 0;
   DateTime get now => tz.TZDateTime.now(tz.getLocation('America/Mexico_City'));
   DateTime? _selectedDate;
@@ -73,6 +76,7 @@ class AppController extends ChangeNotifier {
         language = ['es', 'en'].contains(j['language']) ? j['language'] : 'es';
         reminders = j['reminders'] == true;
         extraordinary = j['extraordinary'] == true;
+        circulationNotifications = j['circulationNotifications'] == true;
       }
     } catch (_) {
       storageWarning = true;
@@ -98,6 +102,7 @@ class AppController extends ChangeNotifier {
           'language': language,
           'reminders': reminders,
           'extraordinary': extraordinary,
+          'circulationNotifications': circulationNotifications,
         }),
       );
       storageWarning = ok != true;
@@ -115,6 +120,12 @@ class AppController extends ChangeNotifier {
       final data = await repository.load(region, selectedDate);
       if (token == _request) {
         snapshot = data;
+        lastCheckedAt = now;
+      }
+    } catch (_) {
+      if (token == _request) {
+        snapshot = null;
+        lastCheckedAt = now;
       }
     } finally {
       if (token == _request) {
@@ -146,7 +157,6 @@ class AppController extends ChangeNotifier {
 
   Future<void> setDate(DateTime value) async {
     _selectedDate = civilDate(value);
-    notifyListeners();
     await refresh();
   }
 
@@ -164,6 +174,7 @@ class AppController extends ChangeNotifier {
       vehicles[i] = value.withRecords(
         documents: vehicles[i].documents,
         maintenance: vehicles[i].maintenance,
+        photoPath: vehicles[i].photoPath,
       );
     }
     selectedId = value.id;
@@ -173,6 +184,71 @@ class AppController extends ChangeNotifier {
 
   Vehicle? vehicleById(String id) =>
       vehicles.where((v) => v.id == id).firstOrNull;
+
+  Future<void> saveVehiclePhoto(
+    String vehicleId,
+    Uint8List bytes,
+    String extension,
+  ) => _updateVehiclePhoto(vehicleId, bytes, extension);
+
+  Future<void> removeVehiclePhoto(String vehicleId) =>
+      _updateVehiclePhoto(vehicleId, null, '');
+
+  Future<void> _updateVehiclePhoto(
+    String vehicleId,
+    Uint8List? bytes,
+    String extension,
+  ) async {
+    if (vehicleById(vehicleId) == null || preview) return;
+    if (!_photoChanges.add(vehicleId)) {
+      throw StateError('Vehicle photo is being saved');
+    }
+    try {
+      var path = '';
+      if (bytes != null) {
+        final imageType = DocumentStore.normalizeExtension(extension);
+        if (imageType == null || imageType == 'pdf' || bytes.isEmpty) {
+          throw const FormatException('Invalid vehicle photo');
+        }
+        path = await documentStore.save(
+          vehicleId: vehicleId,
+          docId: 'photo-${DateTime.now().microsecondsSinceEpoch}',
+          extension: imageType,
+          bytes: bytes,
+        );
+      }
+      await _setVehiclePhoto(vehicleId, path);
+    } finally {
+      _photoChanges.remove(vehicleId);
+    }
+  }
+
+  Future<void> _setVehiclePhoto(String vehicleId, String path) async {
+    final index = vehicles.indexWhere((v) => v.id == vehicleId);
+    if (index < 0) {
+      if (path.isNotEmpty) await documentStore.delete(path);
+      return;
+    }
+    final previous = vehicles[index].photoPath;
+    if (previous == path) return;
+    vehicles[index] = vehicles[index].withRecords(photoPath: path);
+    await _save();
+    if (storageWarning) {
+      final current = vehicles.indexWhere((v) => v.id == vehicleId);
+      if (current >= 0 && vehicles[current].photoPath == path) {
+        vehicles[current] = vehicles[current].withRecords(photoPath: previous);
+        notifyListeners();
+      }
+      throw StateError('Could not save vehicle photo');
+    }
+    if (previous.isNotEmpty) {
+      try {
+        await documentStore.delete(previous);
+      } catch (_) {
+        // Una foto reemplazada no debe bloquear el acceso al vehículo.
+      }
+    }
+  }
 
   Future<void> saveMaintenance(String vehicleId, MaintenanceEntry entry) async {
     final index = vehicles.indexWhere((v) => v.id == vehicleId);
@@ -285,6 +361,11 @@ class AppController extends ChangeNotifier {
   Future<void> setReminders(bool value) async {
     reminders = value;
     notifyListeners();
+    await _save();
+  }
+
+  Future<void> setCirculationNotifications(bool value) async {
+    circulationNotifications = value;
     await _save();
   }
 
