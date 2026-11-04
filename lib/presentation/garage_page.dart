@@ -8,6 +8,7 @@ import 'widgets.dart';
 import 'brand_components.dart';
 import 'vehicle_art.dart';
 import 'documents_page.dart';
+import 'maintenance_page.dart';
 
 class GaragePage extends StatelessWidget {
   const GaragePage({super.key, required this.controller});
@@ -107,6 +108,85 @@ class GaragePage extends StatelessWidget {
                         t('documentsCount')
                             .replaceAll('{n}', '${v.documents.length}'),
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.support_agent_outlined),
+                    title: Text(t('assistanceAndServices')),
+                    children: [
+                      if (v.insurer.isNotEmpty)
+                        ListTile(
+                          title: Text(t('insurer')),
+                          subtitle: Text(v.insurer),
+                        ),
+                      if (v.policyNumber.isNotEmpty)
+                        ListTile(
+                          title: Text(t('policyNumber')),
+                          subtitle: Text(v.policyNumber),
+                        ),
+                      if (v.assistancePhone.isNotEmpty)
+                        ListTile(
+                          title: Text(t('callAssistance')),
+                          subtitle: Text(v.assistancePhone),
+                          leading: const Icon(Icons.phone_outlined),
+                          onTap: () => openOfficial(
+                            c,
+                            Uri(
+                              scheme: 'tel',
+                              path: v.assistancePhone.replaceAll(
+                                RegExp(r'[ ()-]'),
+                                '',
+                              ),
+                            ).toString(),
+                          ),
+                        ),
+                      if (v.insurer.isEmpty &&
+                          v.policyNumber.isEmpty &&
+                          v.assistancePhone.isEmpty)
+                        TextButton(
+                          onPressed: () => openVehicleForm(c, controller, v),
+                          child: Text(t('addAssistance')),
+                        ),
+                      if (v.origin == 'CDMX' || v.origin == 'MX') ...[
+                        ListTile(
+                          leading: const Icon(Icons.open_in_new),
+                          title: Text(t('verificationAppointment')),
+                          onTap: () => openOfficial(
+                            c,
+                            v.origin == 'CDMX'
+                                ? 'https://citasverificentros.cdmx.gob.mx/'
+                                : 'https://citaverificacion.edomex.gob.mx/RegistroCitas/registroVehiculoParticular?opcion=opcionesCita',
+                          ),
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.open_in_new),
+                          title: Text(t('vehicleFees')),
+                          onTap: () => openOfficial(
+                            c,
+                            v.origin == 'CDMX'
+                                ? 'https://data.finanzas.cdmx.gob.mx/consulta_adeudos'
+                                : 'https://pagosytramites.edomex.gob.mx/controlv/Recaudacion/centro.jsp',
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () => Navigator.of(c).push<void>(
+                        MaterialPageRoute(
+                          builder: (_) => MaintenancePage(
+                            controller: controller,
+                            vehicleId: v.id,
+                          ),
+                        ),
+                      ),
+                      icon: const Icon(Icons.build_outlined, size: 20),
+                      label: Text(t('maintenance')),
                     ),
                   ),
                   const SizedBox(height: 10),

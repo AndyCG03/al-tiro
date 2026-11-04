@@ -145,4 +145,65 @@ void main() {
     a.dispose();
     b.dispose();
   });
+
+  testWidgets('vehicle expenses and service deadlines appear on mobile', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final controller = AppController(BundledRepository());
+    await tester.runAsync(() async {
+      await controller.initialize();
+      await controller.saveProfile('Ana');
+      await controller.finishTutorial();
+      await controller.setTheme(ThemeMode.dark);
+      final today = civilDate(controller.now);
+      await controller.saveVehicle(
+        Vehicle(
+          id: '1',
+          name: 'Mi auto',
+          plate: 'A26-BCD',
+          modelYear: 2016,
+          origin: 'CDMX',
+          issuer: 'CDMX',
+          hologram: Hologram.one,
+          kind: VehicleKind.car,
+          maintenance: [
+            MaintenanceEntry(
+              id: 'oil',
+              title: 'Cambio de aceite',
+              date: today,
+              costCents: 74550,
+              nextServiceOn: today.add(const Duration(days: 7)),
+            ),
+          ],
+        ),
+      );
+    });
+    await tester.pumpWidget(AlTiroApp(controller: controller));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Mis autos'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Mantenimiento'));
+    await tester.tap(find.text('Mantenimiento'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Gastos registrados este mes'), findsOneWidget);
+    expect(find.textContaining(RegExp(r'745[.,]50')), findsWidgets);
+    await tester.tap(find.text('Registrar servicio'));
+    await tester.pumpAndSettle();
+    expect(find.text('Importe en MXN (opcional)'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('Cancelar'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Alertas'));
+    await tester.pumpAndSettle();
+    expect(find.text('Próximo servicio · Cambio de aceite'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+    controller.dispose();
+  });
 }

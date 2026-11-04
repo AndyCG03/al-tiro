@@ -1,6 +1,6 @@
 # Contrato de API · v1
 
-Proveedor futuro configurable. No se atribuye una API pública a SEDEMA o CAMe. El backend debe reunir y revisar documentos y avisos oficiales antes de publicar cada respuesta. Sin configuración se usa el conjunto local y los avisos quedan sin confirmar.
+La app apunta por defecto a `https://al-tiro.vercel.app` y permite cambiar el origen mediante `API_BASE_URL`. Si el servicio falla o se desactiva con un valor vacío, se usa el conjunto local y los avisos quedan sin confirmar. El backend de Al Tiro publica reglas y avisos revisados a partir de documentos oficiales.
 
 ## GET /v1/rules?region=cdmx
 
@@ -18,7 +18,9 @@ Ejemplo completo de respuesta: `api_examples/rules_cdmx.json`.
   "coverage": "unknown",
   "checkedAt": "2026-10-22T15:00:00Z",
   "freshUntil": "2026-10-22T15:30:00Z",
-  "items": []
+  "items": [],
+  "sourceUrls": ["https://www.gob.mx/comisionambiental"],
+  "reviewedSourceUrls": []
 }
 ```
 
@@ -36,4 +38,4 @@ Las restricciones extraordinarias se suman al calendario. Sólo una suspensión 
 - No introducir tokens privados en `--dart-define`: el binario y la web son inspeccionables. Si se requiere autenticación, añadir un flujo de sesión y un servicio adecuado antes de publicar.
 - Errores, documentos incompletos o cobertura incierta deben retornar esa incertidumbre; no convertir fallos de captura de avisos en `complete`.
 
-Esta versión prueba peticiones correctas, rechazo de contexto equivocado, fallo HTTP, fuentes no oficiales y selección de un origen seguro. No hay backend desplegado ni canal de avisos reales conectado en el release.
+`sourceUrls` orienta hacia las autoridades de la zona y `reviewedSourceUrls` enlaza las fuentes registradas por el operador. Son campos informativos. Para que un APK previo use estos cambios se necesita una nueva compilación.

@@ -6,9 +6,11 @@ Revisión de fuentes: 22 de octubre de 2026. Esta primera versión es una implem
 
 1. **Gaceta Oficial del Distrito Federal, 19 junio 2014, No. 1882.** Decreto del Programa Hoy No Circula, apartados IV–XI, páginas 8–11. [Documento oficial](https://data.consejeria.cdmx.gob.mx/portal_old/uploads/gacetas/1906201421236d2801b.pdf). Copia en `fuentes/cdmx_2014-06-19.pdf`.
 2. **Gaceta del Gobierno del Estado de México, 30 junio 2025**, acuerdo para las zonas metropolitanas del Valle de Toluca y Santiago Tianguistenco, artículos PRIMERO–SEXTO y OCTAVO, páginas 80–82. [Documento oficial](https://legislacion.edomex.gob.mx/sites/legislacion.edomex.gob.mx/files/files/pdf/gct/2025/junio/jun301/jun301c.pdf). Copia en `fuentes/edomex_2025-06-30.pdf`.
-3. **Registro oficial del programa de verificación de CDMX, segundo semestre 2026**, publicado el 1 julio 2026. [Ficha de SEDEMA](https://proyectos.sedema.cdmx.gob.mx/datos/gocdmx/gaceta-simple/programa-de-verificacion-vehicular-obligatoria-para-el-segundo-semestre-del-ano-2026). Se verificó la ficha, pero la descarga del documento completo no respondió. No se afirma que sus disposiciones completas estén incorporadas.
+3. **Gaceta Oficial de la Ciudad de México, 1 de julio de 2026, No. 1892**, programa de verificación del segundo semestre. [Documento oficial](https://proyectos.sedema.cdmx.gob.mx/datos/storage/app/media/gacetas/GOCDMX_26-07-01_DGCA.pdf). Localizado el 4 de noviembre de 2026. Queda pendiente cotejar sus disposiciones y convenios contra las reglas de la app.
 
 La Gaceta CDMX, la Gaceta del Gobierno del Estado de México y el Diario Oficial de la Federación son publicaciones distintas. No existe una sola regla nacional de circulación obtenible únicamente del color de la placa o de los años del auto.
+
+En CDMX, los numerales 14.3 y 14.4 de la Gaceta del 1 de julio de 2026 distinguen el reconocimiento de constancias ordinarias y voluntarias. El origen de la matrícula, la entidad que expidió la constancia y los criterios con que se otorgó pueden cambiar el resultado. El 14.2 también distingue la situación de vehículos nuevos según el tiempo transcurrido desde que se expidió la tarjeta. Antes de ampliar la cobertura hay que capturar esos datos, cotejar convenios y probar cada supuesto. [Gaceta de CDMX, páginas 46–47](https://proyectos.sedema.cdmx.gob.mx/datos/storage/app/media/gacetas/GOCDMX_26-07-01_DGCA.pdf)
 
 ## Matriz de implementación
 

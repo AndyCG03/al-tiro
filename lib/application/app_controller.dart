@@ -161,7 +161,10 @@ class AppController extends ChangeNotifier {
     if (i < 0) {
       vehicles.add(value);
     } else {
-      vehicles[i] = value;
+      vehicles[i] = value.withRecords(
+        documents: vehicles[i].documents,
+        maintenance: vehicles[i].maintenance,
+      );
     }
     selectedId = value.id;
     notifyListeners();
@@ -170,6 +173,34 @@ class AppController extends ChangeNotifier {
 
   Vehicle? vehicleById(String id) =>
       vehicles.where((v) => v.id == id).firstOrNull;
+
+  Future<void> saveMaintenance(String vehicleId, MaintenanceEntry entry) async {
+    final index = vehicles.indexWhere((v) => v.id == vehicleId);
+    if (index < 0) return;
+    final vehicle = vehicles[index];
+    vehicles[index] = vehicle.withRecords(
+      maintenance: [
+        entry,
+        ...vehicle.maintenance.where((item) => item.id != entry.id),
+      ],
+    );
+    notifyListeners();
+    await _save();
+  }
+
+  Future<void> removeMaintenance(String vehicleId, String entryId) async {
+    final index = vehicles.indexWhere((v) => v.id == vehicleId);
+    if (index < 0) return;
+    final vehicle = vehicles[index];
+    vehicles[index] = vehicle.withRecords(
+      maintenance: [
+        for (final item in vehicle.maintenance)
+          if (item.id != entryId) item,
+      ],
+    );
+    notifyListeners();
+    await _save();
+  }
 
   /// Guarda una copia del documento en el almacenamiento privado y la asocia
   /// al vehículo. Lanza [FormatException] si el tipo o tamaño no son válidos.

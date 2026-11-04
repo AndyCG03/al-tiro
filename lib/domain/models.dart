@@ -8,7 +8,14 @@ enum VehicleAppearance { hatchback, sedan, suv, pickup, moto }
 
 enum Decision { allowed, restricted, review }
 
-enum DocumentKind { circulationCard, verification, insurance, license, other }
+enum DocumentKind {
+  circulationCard,
+  verification,
+  insurance,
+  license,
+  receipt,
+  other,
+}
 
 /// Copia local de un documento (foto o PDF) asociada a un vehículo.
 /// [file] es una ruta relativa al almacenamiento privado de la app.
@@ -52,6 +59,56 @@ String dateKey(DateTime d) =>
     '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 DateTime civilDate(DateTime d) => DateTime(d.year, d.month, d.day);
 
+class MaintenanceEntry {
+  const MaintenanceEntry({
+    required this.id,
+    required this.title,
+    required this.date,
+    this.odometerKm,
+    this.costCents,
+    this.provider = '',
+    this.nextServiceOn,
+    this.isFuel = false,
+    this.receiptId,
+  });
+
+  final String id, title;
+  final DateTime date;
+  final int? odometerKm;
+  final int? costCents;
+  final String provider;
+  final DateTime? nextServiceOn;
+  final bool isFuel;
+  final String? receiptId;
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'date': dateKey(date),
+    'odometerKm': odometerKm,
+    'costCents': costCents,
+    'provider': provider,
+    'nextServiceOn': nextServiceOn == null ? null : dateKey(nextServiceOn!),
+    'isFuel': isFuel,
+    'receiptId': receiptId,
+  };
+
+  factory MaintenanceEntry.fromJson(Map<String, dynamic> json) =>
+      MaintenanceEntry(
+        id: json['id'] as String,
+        title: json['title'] as String,
+        date: DateTime.parse(json['date'] as String),
+        odometerKm: json['odometerKm'] as int?,
+        costCents: json['costCents'] as int?,
+        provider: json['provider'] as String? ?? '',
+        nextServiceOn: DateTime.tryParse(
+          json['nextServiceOn'] as String? ?? '',
+        ),
+        isFuel: json['isFuel'] == true,
+        receiptId: json['receiptId'] as String?,
+      );
+}
+
 class Vehicle {
   const Vehicle({
     required this.id,
@@ -67,10 +124,21 @@ class Vehicle {
     this.isPermit = false,
     this.appearance = VehicleAppearance.hatchback,
     this.documents = const [],
+    this.maintenance = const [],
+    this.insurer = '',
+    this.policyNumber = '',
+    this.assistancePhone = '',
   });
   final String id, name, plate, origin, issuer;
   final List<VehicleDocument> documents;
-  Vehicle withDocuments(List<VehicleDocument> value) => Vehicle(
+  final List<MaintenanceEntry> maintenance;
+  final String insurer, policyNumber, assistancePhone;
+  Vehicle withDocuments(List<VehicleDocument> value) =>
+      withRecords(documents: value);
+  Vehicle withRecords({
+    List<VehicleDocument>? documents,
+    List<MaintenanceEntry>? maintenance,
+  }) => Vehicle(
     id: id,
     name: name,
     plate: plate,
@@ -83,7 +151,11 @@ class Vehicle {
     lastVerified: lastVerified,
     isPermit: isPermit,
     appearance: appearance,
-    documents: value,
+    documents: documents ?? this.documents,
+    maintenance: maintenance ?? this.maintenance,
+    insurer: insurer,
+    policyNumber: policyNumber,
+    assistancePhone: assistancePhone,
   );
   final int modelYear;
   final Hologram hologram;
@@ -110,6 +182,10 @@ class Vehicle {
     'lastVerified': lastVerified == null ? null : dateKey(lastVerified!),
     'isPermit': isPermit,
     'documents': documents.map((d) => d.toJson()).toList(),
+    'maintenance': maintenance.map((entry) => entry.toJson()).toList(),
+    'insurer': insurer,
+    'policyNumber': policyNumber,
+    'assistancePhone': assistancePhone,
   };
   factory Vehicle.fromJson(Map<String, dynamic> j) => Vehicle(
     id: j['id'] as String,
@@ -135,6 +211,12 @@ class Vehicle {
     documents: ((j['documents'] as List?) ?? const [])
         .map((e) => VehicleDocument.fromJson(Map<String, dynamic>.from(e)))
         .toList(),
+    maintenance: ((j['maintenance'] as List?) ?? const [])
+        .map((e) => MaintenanceEntry.fromJson(Map<String, dynamic>.from(e)))
+        .toList(),
+    insurer: j['insurer'] as String? ?? '',
+    policyNumber: j['policyNumber'] as String? ?? '',
+    assistancePhone: j['assistancePhone'] as String? ?? '',
   );
 }
 

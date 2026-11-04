@@ -35,6 +35,7 @@ IconData documentIcon(DocumentKind k) => switch (k) {
   DocumentKind.verification => Icons.verified_outlined,
   DocumentKind.insurance => Icons.shield_outlined,
   DocumentKind.license => Icons.credit_card_outlined,
+  DocumentKind.receipt => Icons.receipt_long_outlined,
   DocumentKind.other => Icons.description_outlined,
 };
 
@@ -43,6 +44,7 @@ String documentKindKey(DocumentKind k) => switch (k) {
   DocumentKind.verification => 'docVerification',
   DocumentKind.insurance => 'docInsurance',
   DocumentKind.license => 'docLicense',
+  DocumentKind.receipt => 'docReceipt',
   DocumentKind.other => 'docOther',
 };
 

@@ -11,7 +11,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   tz_data.initializeTimeZones();
   await initializeDateFormatting('es');
-  const api = String.fromEnvironment('API_BASE_URL');
+  const api = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://al-tiro.vercel.app',
+  );
   final bundled = BundledRepository();
   final repository = api.isEmpty
       ? bundled

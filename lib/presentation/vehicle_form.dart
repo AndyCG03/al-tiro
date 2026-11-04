@@ -64,6 +64,9 @@ class VehicleForm extends StatefulWidget {
 class _VehicleFormState extends State<VehicleForm> {
   final _form = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.vehicle?.name ?? '');
+  late String _insurer = widget.vehicle?.insurer ?? '';
+  late String _policyNumber = widget.vehicle?.policyNumber ?? '';
+  late String _assistancePhone = widget.vehicle?.assistancePhone ?? '';
   late final _plate = TextEditingController(text: widget.vehicle?.plate ?? '');
   late final _year = TextEditingController(
     text: widget.vehicle?.modelYear.toString() ?? '',
@@ -164,7 +167,9 @@ class _VehicleFormState extends State<VehicleForm> {
       validUntil: validUntil,
       lastVerified: lastVerified,
       isPermit: permit,
-      documents: widget.vehicle?.documents ?? const [],
+      insurer: _insurer.trim(),
+      policyNumber: _policyNumber.trim(),
+      assistancePhone: _assistancePhone.trim(),
     );
     await widget.controller.saveVehicle(vehicle);
     if (mounted) {
@@ -395,6 +400,56 @@ class _VehicleFormState extends State<VehicleForm> {
                     onChanged: (v) => setState(() => permit = v),
                   ),
                   const SizedBox(height: 18),
+                  ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    maintainState: true,
+                    initiallyExpanded:
+                        _insurer.isNotEmpty ||
+                        _assistancePhone.isNotEmpty ||
+                        _policyNumber.isNotEmpty,
+                    title: Text(t('vehicleAssistance')),
+                    children: [
+                      field(
+                        TextFormField(
+                          initialValue: _insurer,
+                          maxLength: 80,
+                          decoration: InputDecoration(labelText: t('insurer')),
+                          onChanged: (value) => _insurer = value,
+                        ),
+                      ),
+                      field(
+                        TextFormField(
+                          initialValue: _policyNumber,
+                          maxLength: 80,
+                          decoration: InputDecoration(
+                            labelText: t('policyNumber'),
+                          ),
+                          onChanged: (value) => _policyNumber = value,
+                        ),
+                      ),
+                      field(
+                        TextFormField(
+                          initialValue: _assistancePhone,
+                          maxLength: 25,
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            labelText: t('assistancePhone'),
+                          ),
+                          onChanged: (value) => _assistancePhone = value,
+                          validator: (value) {
+                            final phone = (value ?? '').replaceAll(
+                              RegExp(r'[ ()-]'),
+                              '',
+                            );
+                            return phone.isEmpty ||
+                                    RegExp(r'^\+?\d{7,15}$').hasMatch(phone)
+                                ? null
+                                : t('invalidAssistancePhone');
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                   FilledButton.icon(
                     onPressed: saving ? null : save,
                     icon: const Icon(Icons.check),

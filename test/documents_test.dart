@@ -35,6 +35,41 @@ void main() {
     kind: VehicleKind.car,
   );
 
+  testWidgets('maintenance survives vehicle edits and reopening', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      final a = AppController(BundledRepository());
+      await a.initialize();
+      await a.saveVehicle(
+        Vehicle.fromJson(car.toJson()..remove('maintenance')),
+      );
+      await a.saveMaintenance(
+        car.id,
+        MaintenanceEntry(
+          id: 'service',
+          title: 'Cambio de aceite',
+          date: DateTime(2026, 10, 20),
+          odometerKm: 112000,
+          costCents: 74550,
+          provider: 'Taller',
+          nextServiceOn: DateTime(2027, 4, 20),
+        ),
+      );
+      await a.saveVehicle(car);
+
+      final b = AppController(BundledRepository());
+      await b.initialize();
+      final saved = b.vehicleById(car.id)!.maintenance.single;
+      expect(saved.odometerKm, 112000);
+      expect(saved.costCents, 74550);
+      expect(saved.provider, 'Taller');
+      expect(saved.nextServiceOn, DateTime(2027, 4, 20));
+      await b.removeMaintenance(car.id, 'service');
+      expect(b.vehicleById(car.id)!.maintenance, isEmpty);
+    });
+  });
+
   test(
     'store rejects bad extensions, oversize files and path tricks',
     () async {

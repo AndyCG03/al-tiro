@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 import '../application/app_controller.dart';
 import '../domain/models.dart';
@@ -7,13 +9,43 @@ import 'theme.dart';
 import 'widgets.dart';
 import 'hologram_guide.dart';
 import 'brand_components.dart';
+import 'documents_page.dart';
 
 class AlertsPage extends StatelessWidget {
   const AlertsPage({super.key, required this.controller});
   final AppController controller;
+
+  Future<void> _openCalendar(
+    BuildContext context,
+    String title,
+    DateTime date,
+  ) async {
+    final start = DateTime.utc(date.year, date.month, date.day);
+    try {
+      final opened = await const MethodChannel('mx.sidarta.al_tiro/calendar')
+          .invokeMethod<bool>('addEvent', {
+            'title': title,
+            'start': start.millisecondsSinceEpoch,
+            'end': start.add(const Duration(days: 1)).millisecondsSinceEpoch,
+          });
+      if (opened == true) return;
+    } on PlatformException {
+      // Present the same fallback as when no calendar app is installed.
+    } on MissingPluginException {
+      // A preview or an older native build may lack the calendar channel.
+    }
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppText.of(context)('calendarUnavailable'))),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext c) {
     final t = AppText.of(c), a = controller;
+    final hasCalendar =
+        !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
     final result = a.evaluate();
     final expiring = a.vehicles
         .where(
@@ -22,10 +54,36 @@ class AlertsPage extends StatelessWidget {
               v.validUntil!.difference(civilDate(a.now)).inDays <= 30,
         )
         .toList();
-    final nextDays = List.generate(
-      7,
-      (i) => civilDate(a.now).add(Duration(days: i)),
-    ).where((d) => a.evaluate(d)?.ordinary == Decision.restricted).toList();
+    final today = civilDate(a.now);
+    final nextDays =
+        [
+              for (var offset = 0; offset < 7; offset++)
+                today.add(Duration(days: offset)),
+            ]
+            .map((date) => (date: date, result: a.evaluate(date)))
+            .where((day) => day.result?.ordinary == Decision.restricted);
+    final through = civilDate(a.now).add(const Duration(days: 30));
+    final deadlines = [
+      for (final vehicle in a.vehicles) ...[
+        for (final doc in vehicle.documents)
+          if (doc.expiresOn case final date? when !date.isAfter(through))
+            (
+              name: vehicle.name,
+              label: doc.title.isEmpty
+                  ? t(documentKindKey(doc.kind))
+                  : doc.title,
+              date: date,
+            ),
+        for (final service in vehicle.maintenance)
+          if (service.nextServiceOn case final date?
+              when !date.isAfter(through))
+            (
+              name: vehicle.name,
+              label: '${t('nextService')} · ${service.title}',
+              date: date,
+            ),
+      ],
+    ]..sort((a, b) => a.date.compareTo(b.date));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -102,8 +160,10 @@ class AlertsPage extends StatelessWidget {
                     (d) => ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: Icon(Icons.event_busy, color: Brand.accent(c)),
-                      title: Text(prettyDate(c, d, 'EEEE d MMM')),
-                      subtitle: Text('${a.active?.name} · 05:00–22:00'),
+                      title: Text(prettyDate(c, d.date, 'EEEE d MMM')),
+                      subtitle: Text(
+                        '${a.active?.name} · ${d.result!.windows.map((w) => w.label).toSet().join(', ')}',
+                      ),
                     ),
                   ),
                 ],
@@ -128,11 +188,44 @@ class AlertsPage extends StatelessWidget {
                     ),
                   ),
                   subtitle: Text('${v.name} · ${dateKey(v.validUntil!)}'),
+                  trailing: hasCalendar
+                      ? IconButton(
+                          tooltip: t('addToPhoneCalendar'),
+                          icon: const Icon(Icons.event_available_outlined),
+                          onPressed: () => _openCalendar(
+                            c,
+                            t('verificationSoon'),
+                            v.validUntil!,
+                          ),
+                        )
+                      : null,
                 ),
               ),
             ),
           ),
-          if (expiring.isEmpty)
+          for (final deadline in deadlines)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: Surface(
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: Icon(Icons.event_outlined, color: Brand.accent(c)),
+                  title: Text(deadline.label),
+                  subtitle: Text(
+                    '${deadline.name} · ${prettyDate(c, deadline.date, 'd MMM y')}',
+                  ),
+                  trailing: hasCalendar
+                      ? IconButton(
+                          tooltip: t('addToPhoneCalendar'),
+                          icon: const Icon(Icons.event_available_outlined),
+                          onPressed: () =>
+                              _openCalendar(c, deadline.label, deadline.date),
+                        )
+                      : null,
+                ),
+              ),
+            ),
+          if (expiring.isEmpty && deadlines.isEmpty)
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: Text(t('noPending')),
