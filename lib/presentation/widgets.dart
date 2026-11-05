@@ -281,6 +281,71 @@ class ResultDetail extends StatelessWidget {
   }
 }
 
+class OfficialSmsButton extends StatelessWidget {
+  const OfficialSmsButton({super.key, required this.vehicle});
+
+  final Vehicle? vehicle;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppText.of(context);
+    return TextButton.icon(
+      icon: const Icon(Icons.sms_outlined, size: 18),
+      label: Text(t('officialSms')),
+      onPressed: () => showModalBottomSheet<void>(
+        context: context,
+        showDragHandle: true,
+        isScrollControlled: true,
+        useSafeArea: true,
+        builder: (sheet) {
+          final car = vehicle;
+          final digit = RegExp(r'[0-9](?!.*[0-9])')
+              .firstMatch(car?.plate ?? '')
+              ?.group(0);
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t('officialSms'),
+                    style: Theme.of(sheet).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(t('officialSmsSteps')),
+                  if (car != null) ...[
+                    const SizedBox(height: 12),
+                    Text(car.name),
+                    if (car.hologram != Hologram.exempt &&
+                        car.hologram != Hologram.none)
+                      Text(
+                        '${t('hologram')} · ${holoLabel(sheet, car.hologram)}',
+                      ),
+                    if (digit != null)
+                      Text('${t('officialSmsDigit')} · $digit'),
+                  ],
+                  const SizedBox(height: 12),
+                  Text(t('officialSmsPrivacy')),
+                  const SizedBox(height: 16),
+                  FilledButton.icon(
+                    onPressed: () => openOfficial(
+                      sheet,
+                      'https://hoynocircula.cdmx.gob.mx/',
+                    ),
+                    icon: const Icon(Icons.open_in_new),
+                    label: Text(t('officialSmsOpen')),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 Future<void> openOfficial(BuildContext c, String url) async {
   try {
     if (!await launchUrl(

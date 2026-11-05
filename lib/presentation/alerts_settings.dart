@@ -89,6 +89,7 @@ class AlertsPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         BrandSectionHeader(t('yourAlerts'), t('alertBody')),
+        if (a.region == Region.cdmx) OfficialSmsButton(vehicle: a.active),
         if (a.extraordinary) ...[
           Surface(
             color: Brand.accent(c).withValues(alpha: .09),

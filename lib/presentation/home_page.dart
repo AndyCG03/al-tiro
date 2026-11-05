@@ -198,6 +198,8 @@ class HomePage extends StatelessWidget {
                           t('pendingBody'),
                           style: Theme.of(c).textTheme.bodyMedium,
                         ),
+                        if (controller.region == Region.cdmx)
+                          OfficialSmsButton(vehicle: v),
                       ],
                     ),
                   ),
