@@ -26,6 +26,8 @@ Ejemplo completo de respuesta: `api_examples/rules_cdmx.json`.
 
 `coverage: complete` sólo después de revisar todas las fuentes aplicables para esa zona y fecha; `items: []` por sí solo no demuestra ausencia de contingencia. La app también verifica que la última revisión tenga menos de tres horas, no esté en el futuro y no haya vencido. Es una política de frescura del software, no un plazo establecido por la gaceta.
 
+`ordinaryCalendar` es opcional. Para la fecha actual de CDMX, puede contener `date`, `digits`, `checkedAt` y `sourceUrl` cuando el portal oficial publica un par verificable de terminaciones entre semana. La app muestra ese dato como referencia del calendario ordinario. La evaluación del vehículo y el estado de contingencias usan sus fuentes y criterios propios.
+
 Cada aviso contiene `id`, `region`, fechas civiles `from`/`until`, `title`, `sourceUrl` HTTPS oficial, `kind` (`restriction` o `suspension`), `digits` (vacío = todas las terminaciones), `holograms` (vacío = todos), `startMinute` y `endMinute` (minutos del día, inicio inclusivo y final exclusivo). Los hologramas se serializan `doubleZero`, `zero`, `one`, `two`, `exempt`, `none`.
 
 Las restricciones extraordinarias se suman al calendario. Sólo una suspensión de día completo, expresamente publicada y sin un aviso incompatible, puede anular automáticamente el calendario ordinario. Suspensiones parciales o avisos contradictorios piden revisión. No se deducen los grupos afectados a partir del título o del texto libre con IA.

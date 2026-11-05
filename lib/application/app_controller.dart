@@ -34,7 +34,8 @@ class AppController extends ChangeNotifier {
       loading = false,
       storageWarning = false;
   DataSnapshot? snapshot;
-  DateTime? lastCheckedAt;
+  final _lastUpdates = <Region, DateTime>{};
+  DateTime? get lastUpdatedAt => _lastUpdates[region];
   final _photoChanges = <String>{};
   int _request = 0;
   DateTime get now => tz.TZDateTime.now(tz.getLocation('America/Mexico_City'));
@@ -59,6 +60,11 @@ class AppController extends ChangeNotifier {
   Future<void> initialize() async {
     try {
       _prefs = await SharedPreferences.getInstance();
+      for (final area in Region.values) {
+        final value = _prefs!.getString('circulation_update_${area.name}');
+        final date = value == null ? null : DateTime.tryParse(value);
+        if (date != null) _lastUpdates[area] = date;
+      }
       final raw = _prefs!.getString('hcmx_state_v1');
       if (raw != null) {
         final j = jsonDecode(raw) as Map<String, dynamic>;
@@ -114,18 +120,32 @@ class AppController extends ChangeNotifier {
 
   Future<void> refresh() async {
     final token = ++_request;
+    final area = region;
+    final date = selectedDate;
     loading = true;
     notifyListeners();
     try {
-      final data = await repository.load(region, selectedDate);
+      final data = await repository.load(area, date);
       if (token == _request) {
         snapshot = data;
-        lastCheckedAt = now;
+        final checked = now;
+        if (data.remote && dateKey(date) == dateKey(checked)) {
+          _lastUpdates[area] = checked;
+          if (!preview) {
+            try {
+              await _prefs?.setString(
+                'circulation_update_${area.name}',
+                checked.toUtc().toIso8601String(),
+              );
+            } catch (_) {
+              storageWarning = true;
+            }
+          }
+        }
       }
     } catch (_) {
       if (token == _request) {
         snapshot = null;
-        lastCheckedAt = now;
       }
     } finally {
       if (token == _request) {
@@ -136,6 +156,7 @@ class AppController extends ChangeNotifier {
   }
 
   Future<void> setRegion(Region value) async {
+    _request++;
     region = value;
     snapshot = null;
     notifyListeners();
@@ -156,7 +177,8 @@ class AppController extends ChangeNotifier {
   }
 
   Future<void> setDate(DateTime value) async {
-    _selectedDate = civilDate(value);
+    final date = civilDate(value);
+    _selectedDate = date == civilDate(now) ? null : date;
     await refresh();
   }
 

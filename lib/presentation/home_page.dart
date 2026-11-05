@@ -24,6 +24,11 @@ class HomePage extends StatelessWidget {
     final v = controller.active;
     final officialCheck = controller.snapshot?.feed.checkedAt;
     final sameDay = dateKey(controller.selectedDate) == dateKey(controller.now);
+    final digits = controller.snapshot?.cdmxDigits ?? const <int>[];
+    final lastUpdate = controller.lastUpdatedAt;
+    final lastUpdateCdmx = lastUpdate == null
+        ? null
+        : tz.TZDateTime.from(lastUpdate, tz.getLocation('America/Mexico_City'));
     final nowDecision = result?.atMinute(
       controller.now.hour * 60 + controller.now.minute,
     );
@@ -138,10 +143,10 @@ class HomePage extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  if (controller.lastCheckedAt case final checked?) ...[
+                  if (lastUpdateCdmx case final checked?) ...[
                     const SizedBox(height: 8),
                     Text(
-                      '${t(controller.snapshot?.remote == true ? 'lastApiCheck' : 'lastLocalCheck')} '
+                      '${t('lastApiCheck')} ${prettyDate(c, checked, 'yMMMd')} · '
                       '${MaterialLocalizations.of(c).formatTimeOfDay(TimeOfDay.fromDateTime(checked))} (CDMX)',
                       style: TextStyle(
                         fontSize: 12,
@@ -151,6 +156,8 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ],
+                  if (controller.snapshot?.remote == false)
+                    Text(t('localCirculationData')),
                   if (result?.noticesConfirmed == true && officialCheck != null)
                     Text(
                       '${t('officialCheckConfirmed')} '
@@ -161,6 +168,16 @@ class HomePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
+          if (sameDay &&
+              controller.snapshot?.cdmxCalendarDate ==
+                  dateKey(controller.selectedDate) &&
+              digits.isNotEmpty)
+            TextButton.icon(
+              onPressed: () =>
+                  openOfficial(c, 'https://hoynocircula.cdmx.gob.mx/'),
+              icon: const Icon(Icons.open_in_new),
+              label: Text('${t('cdmxOrdinaryDigits')} ${digits.join(', ')}'),
+            ),
           if (result != null && !result.noticesConfirmed)
             Surface(
               child: Row(

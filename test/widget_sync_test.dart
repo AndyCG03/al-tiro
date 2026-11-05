@@ -14,6 +14,23 @@ void main() {
     await initializeDateFormatting('es');
   });
 
+  testWidgets(
+    'conserva la última actualización de la API al volver sin conexión',
+    (tester) async {
+      final saved = '2026-10-22T16:00:00.000Z';
+      SharedPreferences.setMockInitialValues({
+        'circulation_update_cdmx': saved,
+      });
+      final controller = AppController(BundledRepository());
+      await tester.runAsync(() => controller.initialize());
+      expect(controller.lastUpdatedAt?.toUtc().toIso8601String(), saved);
+      expect(controller.snapshot?.remote, isFalse);
+      await tester.runAsync(() => controller.setRegion(Region.toluca));
+      expect(controller.lastUpdatedAt, isNull);
+      controller.dispose();
+    },
+  );
+
   testWidgets('el widget sin autos pide agregar uno', (tester) async {
     final a = AppController(BundledRepository());
     await tester.runAsync(() => a.initialize());

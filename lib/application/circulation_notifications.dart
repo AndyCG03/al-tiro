@@ -65,7 +65,7 @@ class CirculationNotifications {
     final region = controller.region;
     final context = '${dateKey(now)}|${region.name}|${car.id}|';
     final key = '$context${decision.name}';
-    final checkedAt = controller.lastCheckedAt;
+    final snapshot = controller.snapshot;
     final t = AppText(controller.language);
     _sending = true;
     try {
@@ -74,7 +74,7 @@ class CirculationNotifications {
       if (previous == key) return;
       if (!controller.circulationNotifications ||
           controller.loading ||
-          controller.lastCheckedAt != checkedAt ||
+          controller.snapshot != snapshot ||
           controller.region != region ||
           controller.active?.id != car.id ||
           dateKey(controller.selectedDate) != dateKey(now)) {

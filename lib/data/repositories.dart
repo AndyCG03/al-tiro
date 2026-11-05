@@ -7,10 +7,18 @@ import 'package:http/http.dart' as http;
 import '../domain/models.dart';
 
 class DataSnapshot {
-  const DataSnapshot(this.policy, this.feed, {required this.remote});
+  const DataSnapshot(
+    this.policy,
+    this.feed, {
+    required this.remote,
+    this.cdmxDigits = const [],
+    this.cdmxCalendarDate,
+  });
   final RulePolicy policy;
   final NoticeFeed feed;
   final bool remote;
+  final List<int> cdmxDigits;
+  final String? cdmxCalendarDate;
 }
 
 abstract interface class CirculationRepository {
@@ -106,7 +114,26 @@ class ApiRepository implements CirculationRepository {
         checkedAt: DateTime.parse(j['checkedAt']).toUtc(),
         freshUntil: DateTime.parse(j['freshUntil']).toUtc(),
       );
-      return DataSnapshot(policy, feed, remote: true);
+      final calendar = j['ordinaryCalendar'];
+      final digits = calendar is Map && calendar['date'] == dateKey(date)
+          ? calendar['digits']
+          : null;
+      return DataSnapshot(
+        policy,
+        feed,
+        remote: true,
+        cdmxCalendarDate: dateKey(date),
+        cdmxDigits:
+            region == Region.cdmx &&
+                digits is List &&
+                digits.length == 2 &&
+                digits[0] != digits[1] &&
+                digits.every(
+                  (digit) => digit is int && digit >= 0 && digit <= 9,
+                )
+            ? List<int>.unmodifiable(digits)
+            : const [],
+      );
     } catch (_) {
       // Never reuse a previously positive decision when the API cannot be checked.
       return fallback.load(region, date);
